@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="770px"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/message_border"
+        android:layout_marginLeft="@dimen/margin_main_middle"
+        android:layout_marginTop="@dimen/margin_main_middle"
+        >
+
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/keyboard_edit_height"
+    android:textSize="@dimen/text_size_30"
+    android:gravity="center_vertical"
+    android:text="@string/vuene_login"
+    android:textColor="@color/dark_black"
+    android:layout_alignParentRight="true"
+    android:id="@+id/venue_login"
+    android:layout_marginRight="@dimen/margin_main"
+    />
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/almost_white"
+        android:layout_below="@+id/venue_login"
+       />
+        <include
+            android:layout_below="@+id/venue_login"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            layout="@layout/keyborad_no_verify"
+            android:id="@+id/keyborad"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_main"
+            />
+        <TextView
+            android:layout_marginTop="@dimen/margin_main"
+            android:layout_width="@dimen/circleProgressBar_width"
+            android:layout_height="@dimen/keyboard_edit_height"
+            android:textSize="@dimen/text_size_36"
+            android:text="@string/confirm"
+            android:id="@+id/confirm"
+            android:layout_below="@+id/keyborad"
+            android:gravity="center"
+            android:textColor="@color/almost_white"
+            android:background="@drawable/border_red_gradient"
+            android:layout_centerHorizontal="true"
+            />
+    </RelativeLayout>
+    <ImageView
+        android:layout_width="@dimen/keyboard_edit_height"
+        android:layout_height="@dimen/keyboard_edit_height"
+        android:src="@drawable/close"
+        android:id="@+id/close"
+        />
+</RelativeLayout>

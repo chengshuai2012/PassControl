@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.link.cloud.activity.EntanceActivity">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:id="@+id/face_ll"
+        android:background="@drawable/way1_gradient"
+        >
+        <TextView
+            android:layout_width="@dimen/entance_tv_width"
+            android:layout_height="@dimen/entance_tv_height"
+            android:textSize="@dimen/entance_tv_size"
+            android:textStyle="bold"
+            android:textColor="@color/entance_tv_color"
+            android:text="@string/way1"
+            android:gravity="center"
+            android:background="@drawable/way_border"
+            android:layout_marginTop="@dimen/entance_tv_margin"
+            android:layout_marginBottom="@dimen/entance_tv_margin"
+            />
+        <ImageView
+            android:layout_width="@dimen/entance_image_size"
+            android:layout_height="@dimen/entance_image_size"
+            android:src="@drawable/face_way"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/way2_gradient"
+        android:id="@+id/qrcode_ll"
+        >
+        <TextView
+            android:layout_width="@dimen/entance_tv_width"
+            android:layout_height="@dimen/entance_tv_height"
+            android:textSize="@dimen/entance_tv_size"
+            android:textStyle="bold"
+            android:textColor="@color/entance_tv_color"
+            android:text="@string/way2"
+            android:gravity="center"
+            android:background="@drawable/way_border"
+            android:layout_marginTop="@dimen/entance_tv_margin"
+            android:layout_marginBottom="@dimen/entance_tv_margin"
+            />
+        <ImageView
+            android:layout_width="@dimen/entance_image_size"
+            android:layout_height="@dimen/entance_image_size"
+            android:src="@drawable/qrcode_way"
+            />
+        <EditText
+            android:id="@+id/code_number"
+            android:layout_width="1dp"
+            android:layout_height="1dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:id="@+id/veune_ll"
+        android:background="@drawable/way3_gradient"
+        >
+        <TextView
+            android:layout_width="@dimen/entance_tv_width"
+            android:layout_height="@dimen/entance_tv_height"
+            android:textSize="@dimen/entance_tv_size"
+            android:textStyle="bold"
+            android:textColor="@color/entance_tv_color"
+            android:text="@string/way3"
+            android:gravity="center"
+            android:background="@drawable/way_border"
+            android:layout_marginTop="@dimen/entance_tv_margin"
+            android:layout_marginBottom="@dimen/entance_tv_margin"
+            />
+        <ImageView
+            android:layout_width="@dimen/entance_image_size"
+            android:layout_height="@dimen/entance_image_size"
+            android:src="@drawable/venue_way"
+            />
+    </LinearLayout>
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="@dimen/bind_finish_height"
+        android:layout_height="@dimen/text_height_main"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/margin_main"
+        android:layout_marginTop="@dimen/margin_main"
+        android:background="@drawable/border_member"
+        android:orientation="horizontal"
+        android:padding="2dp">
+
+
+        <TextView
+            android:id="@+id/manager"
+            style="@style/TextView_Top_Main"
+            android:background="@drawable/border_red"
+            android:text="@string/manager"
+            android:textColor="@color/almost_white" />
+    </LinearLayout>
+</RelativeLayout>
+</LinearLayout>

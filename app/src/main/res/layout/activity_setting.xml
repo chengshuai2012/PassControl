@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_main"
+            android:gravity="center_horizontal"
+            android:text="@string/device_id"
+            android:id="@+id/device_id"
+            android:textColor="@color/setting_text_black"
+            android:textSize="@dimen/text_size_60" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:id="@+id/psw_ll"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/setting_text_black"
+                android:textSize="@dimen/text_size_60"
+                android:text="@string/device_psw"
+                />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/setting_text_black"
+                android:textSize="@dimen/text_size_60"
+                android:hint="@string/please_device_psw"
+                android:id="@+id/edit_psw"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="@dimen/setting_text_view_width"
+            android:layout_height="@dimen/setting_text_view_height"
+            android:id="@+id/qcode_ll"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="8px"
+            android:paddingTop="8px">
+
+            <TextView
+                android:id="@+id/qcode_have"
+                android:layout_width="@dimen/card_imageView_height"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/qcode_have"
+                android:background="@drawable/border_red_gradient"
+                android:textColor="@color/almost_white"
+                android:textSize="@dimen/text_size_28" />
+
+            <TextView
+                android:id="@+id/qcode_no"
+                android:layout_width="@dimen/card_imageView_height"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/qcode_no"
+                android:textColor="@color/dark_black"
+                android:background="@drawable/border_gray_gradient"
+                android:textSize="@dimen/text_size_28" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="@dimen/setting_text_view_width"
+            android:layout_height="@dimen/setting_text_view_height"
+            android:id="@+id/venue_ll"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="8px"
+            android:paddingTop="8px">
+
+            <TextView
+                android:id="@+id/venue_have"
+                android:layout_width="@dimen/card_imageView_height"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/veune_have"
+                android:background="@drawable/border_red_gradient"
+                android:textColor="@color/almost_white"
+                android:textSize="@dimen/text_size_28" />
+
+            <TextView
+                android:id="@+id/venue_no"
+                android:layout_width="@dimen/card_imageView_height"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/veune_no"
+                android:textColor="@color/dark_black"
+                android:background="@drawable/border_gray_gradient"
+                android:textSize="@dimen/text_size_28" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="@dimen/setting_text_view_width"
+            android:layout_height="@dimen/setting_text_view_height"
+            android:id="@+id/face_ll"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="8px"
+            android:paddingTop="8px">
+
+            <TextView
+                android:id="@+id/face_have"
+                android:layout_width="@dimen/card_imageView_height"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/face_have"
+                android:background="@drawable/border_red_gradient"
+                android:textColor="@color/almost_white"
+                android:textSize="@dimen/text_size_28" />
+
+            <TextView
+                android:id="@+id/face_no"
+                android:layout_width="@dimen/card_imageView_height"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/face_no"
+                android:textColor="@color/dark_black"
+                android:background="@drawable/border_gray_gradient"
+                android:textSize="@dimen/text_size_28" />
+        </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/open_or_close"
+                android:layout_width="@dimen/setting_text_view_width"
+                android:layout_height="@dimen/setting_text_view_height"
+                android:layout_above="@+id/back_system_setting"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="8px"
+                android:paddingTop="8px">
+
+                <TextView
+                    android:id="@+id/open"
+                    android:layout_width="@dimen/card_imageView_height"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/open_door"
+                    android:background="@drawable/border_red_gradient"
+                    android:textColor="@color/almost_white"
+                    android:textSize="@dimen/text_size_28" />
+
+                <TextView
+                    android:id="@+id/close"
+                    android:layout_width="@dimen/card_imageView_height"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/close_door"
+                    android:textColor="@color/dark_black"
+                    android:background="@drawable/border_gray_gradient"
+                    android:textSize="@dimen/text_size_28" />
+            </LinearLayout>
+        <TextView
+            android:id="@+id/save"
+            android:layout_width="@dimen/setting_text_view_width"
+            android:layout_height="100px"
+            android:background="@drawable/manager_text_bg"
+            android:gravity="center_horizontal"
+            android:paddingTop="10px"
+            android:text="@string/save_all"
+            android:textColor="@color/setting_text_black"
+            android:textSize="@dimen/text_size_32" />
+
+        <TextView
+            android:id="@+id/back_system_setting"
+            android:layout_width="@dimen/setting_text_view_width"
+            android:layout_height="100px"
+            android:background="@drawable/manager_text_bg"
+            android:gravity="center_horizontal"
+            android:paddingTop="10px"
+            android:text="@string/back_system"
+            android:textColor="@color/setting_text_black"
+            android:textSize="@dimen/text_size_32" />
+
+        <TextView
+            android:id="@+id/back_app"
+            android:layout_width="@dimen/setting_text_view_width"
+            android:layout_height="100px"
+            android:background="@drawable/manager_text_bg"
+            android:gravity="center_horizontal"
+            android:paddingTop="10px"
+            android:text="@string/back_app"
+            android:textColor="@color/setting_text_black"
+            android:textSize="@dimen/text_size_32" />
+
+        <TextView
+            android:id="@+id/back_system_main"
+            android:layout_width="@dimen/setting_text_view_width"
+            android:layout_height="100px"
+            android:background="@drawable/manager_text_bg"
+            android:gravity="center_horizontal"
+            android:paddingTop="10px"
+            android:text="@string/back_system_main"
+            android:textColor="@color/setting_text_black"
+            android:textSize="@dimen/text_size_32" />
+        <TextView
+            android:id="@+id/restart_app"
+            android:layout_width="@dimen/setting_text_view_width"
+            android:layout_height="100px"
+            android:background="@drawable/manager_text_bg"
+            android:gravity="center_horizontal"
+            android:paddingTop="10px"
+            android:text="@string/restart"
+            android:textColor="@color/setting_text_black"
+            android:textSize="@dimen/text_size_32" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape  android:shape="oval">
+            <!-- 开始颜色="" 结束颜色="" 颜色渐变="" -->
+            <gradient android:angle="270" android:endColor="@color/almost_white" android:startColor="@color/almost_white" />
+            <!-- 渐变方向 按钮边缘="" 边缘宽="" -->
+            <stroke android:width="1sp" android:color="@color/red" />
+            <!-- 边缘颜色 按钮四个圆角="" -->
+            <corners android:radius="10dp" />
+            <!-- 半径 内边距="" 按钮文字和边缘距离="" -->
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape android:shape="oval">
+            <gradient android:angle="270" android:endColor="#7d5a7d" android:startColor="#7d5a7d" />
+            <stroke android:width="1sp" android:color="@color/red" />
+            <corners android:radius="100dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <gradient android:angle="270" android:endColor="#00000000" android:startColor="#00000000" />
+            <stroke android:width="1sp" android:color="#dcdcdc" />
+           <size android:width="@dimen/margin_main"
+               android:height="@dimen/margin_main"
+               ></size>
+        </shape>
+
+    </item>
+</selector>

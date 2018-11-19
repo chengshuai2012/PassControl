@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="entance_tv_color">#3D3A39</color>
+    <color name="way1_start_color">#F4407B</color>
+    <color name="way1_end_color">#BF81F5</color>
+    <color name="way2_start_color">#FF5C5C</color>
+    <color name="way2_end_color">#FFC955</color>
+    <color name="way3_start_color">#6083EC</color>
+    <color name="way3_end_color">#7B4FA7</color>
+
+    <color name="red">#D71718</color>
+    <color name="light_gray">#E2E2E2</color>
+    <color name="almost_white">#F3F3F3</color>
+    <color name="translate">#00000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="text_gray">#666666</color>
+    <color name="dark_red">#D71740</color>
+    <color name="black">#282828</color>
+    <color name="dark_black">#333333</color>
+    <color name="setting_text_black">#FF030212</color>
+    <color name="orange">#FF6637</color>
+    <color name="dark_gray">#999999</color>
+    <color name="text_red">#E61515</color>
+    <color name="colorbutton">#333333</color>
+    <color name="color_black_333333">#333333</color>
+    <color name="color_gray_999999">#999999</color>
+    <color name="textColorPrimaryDark">#000000</color>
+    <color name="colorSecondary">#D0B183</color>
+    <color name="textColorPrimary">#1B1E1E</color>
+    <color name="textColorSecondary">#CDCDCD</color>
+    <color name="textColorPrimaryGray">#8E8E8E</color>
+    <color name="divider_color">#E3E6E9</color>
+    <color name="windowBackgroundLight">#FFFFFF</color>
+    <color name="windowBackground">#F0F0F0</color>
+    <color name="text_register">#666666</color>
+    <color name="color_f5f5f5">#F5F5F5</color>
+    <color name="color_362B6A">#362B6A</color>
+</resources>

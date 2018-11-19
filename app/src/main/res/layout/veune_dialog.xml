@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="770px"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margin_main_middle"
+        android:layout_marginTop="@dimen/margin_main_middle"
+        android:background="@drawable/message_border">
+
+        <TextView
+            android:id="@+id/psw_login"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/keyboard_edit_height"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/margin_main"
+            android:gravity="center_vertical"
+            android:text="@string/psw_login"
+            android:textColor="@color/dark_black"
+            android:textSize="@dimen/text_size_30" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/psw_login"
+            android:background="@color/almost_white" />
+
+        <ImageView
+            android:id="@+id/veune_way"
+            android:layout_width="@dimen/dialog_icon"
+            android:layout_height="@dimen/dialog_icon"
+            android:layout_below="@+id/psw_login"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_main_middle"
+            android:src="@drawable/veune_way" />
+
+        <TextView
+            android:id="@+id/handy_venue"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/text_height_main"
+            android:layout_below="@+id/veune_way"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_main_middle"
+            android:gravity="center"
+            android:text="@string/handy_venue"
+            android:textSize="@dimen/text_size_36"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/handy_venue_intro"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/text_height_main"
+            android:layout_below="@+id/handy_venue"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_main_middle"
+            android:gravity="center"
+            android:text="@string/handy_venue_intro"
+            android:textSize="@dimen/text_size_28" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/handy_venue_intro"
+            android:layout_marginTop="@dimen/margin_main_middle"
+            android:background="@color/almost_white" />
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/text_height_main"
+            android:layout_below="@+id/divider"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_main_middle"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/red"
+            android:textSize="@dimen/text_size_36" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="@dimen/keyboard_edit_height"
+        android:layout_height="@dimen/keyboard_edit_height"
+        android:src="@drawable/close" />
+</RelativeLayout>
