@@ -139,7 +139,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Venueuti
     }
     protected void onResume() {
         super.onResume();
-
     }
 
     protected void onPause() {

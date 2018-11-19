@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.link.cloud.activity.EntanceActivity;
 import com.link.cloud.activity.SplashActivity;
 
 
@@ -36,10 +37,9 @@ public class TimeService extends Service {
         public void onReceive(Context context, Intent intent) {
             Log.e("onReceive: ","count"+count );
             if (intent.getAction().equals(Intent.ACTION_TIME_TICK)&&count==0) {
-                Intent sayHelloIntent = new Intent(context, SplashActivity.class);
+                Intent sayHelloIntent = new Intent(context, EntanceActivity.class);
                 sayHelloIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(sayHelloIntent);
-                android.os.Process.killProcess(android.os.Process.myPid());
             }
             if(intent.getAction().equals(PassControlApplication.COUNT_CHANGE)){
                 count=intent.getIntExtra("count",0);

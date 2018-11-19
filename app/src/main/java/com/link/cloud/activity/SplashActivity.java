@@ -1,15 +1,11 @@
 package com.link.cloud.activity;
 
-import android.Manifest;
+
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.link.cloud.R;
 import com.link.cloud.base.BaseActivity;
@@ -21,11 +17,9 @@ import com.link.cloud.network.bean.AllUser;
 import com.link.cloud.network.bean.BindUser;
 import com.link.cloud.network.bean.CabnetDeviceInfoBean;
 import com.link.cloud.network.bean.DeviceInfo;
-import com.link.cloud.utils.NettyClientBootstrap;
 import com.link.cloud.utils.TTSUtils;
-import com.orhanobut.logger.Logger;
 
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -34,13 +28,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import io.reactivex.annotations.NonNull;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class SplashActivity extends BaseActivity implements SplashContronller.SplashControllerListener{
-
-    private NettyClientBootstrap nettyClientBootstrap;
     int total;
     private SplashContronller splashContronller;
     private DeviceInfo deviceInfo;
@@ -61,14 +52,6 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
         if (deviceInfo != null && deviceInfo.getPsw() != null && !TextUtils.isEmpty(deviceInfo.getPsw())) {
             if (deviceInfo.getToken() != null && !TextUtils.isEmpty(deviceInfo.getToken())) {
                 HttpConfig.TOKEN = deviceInfo.getToken();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        nettyClientBootstrap = new NettyClientBootstrap(SplashActivity.this, Constants.TCP_PORT, Constants.TCP_URL, "{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + deviceInfo.getToken() + "\"}");
-                        nettyClientBootstrap.start();
-                    }
-                }).start();
-
                 splashContronller.getUser(1);
             } else {
                 getToken();
@@ -111,8 +94,6 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
         });
         HttpConfig.TOKEN = cabnetDeviceInfoBean.getToken();
         splashContronller.getAppVersion();
-        nettyClientBootstrap = new NettyClientBootstrap(this, Constants.TCP_PORT, Constants.TCP_URL, "{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + deviceInfo.getToken() + "\"}");
-        nettyClientBootstrap.start();
         splashContronller.getUser(1);
     }
 

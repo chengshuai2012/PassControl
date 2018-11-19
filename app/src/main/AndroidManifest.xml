@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".activity.EntanceActivity"
             android:windowSoftInputMode="stateHidden"
+            android:launchMode="singleTop"
             />
         <activity android:name=".activity.SettingActivity"/>
         <service android:name=".veune.MdUsbService"/>

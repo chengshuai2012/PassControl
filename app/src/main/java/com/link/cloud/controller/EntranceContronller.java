@@ -2,6 +2,8 @@ package com.link.cloud.controller;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.link.cloud.base.Constants;
 import com.link.cloud.network.BaseEntity;
 import com.link.cloud.network.BaseObserver;
@@ -12,6 +14,8 @@ import com.link.cloud.network.bean.BindUser;
 import com.link.cloud.network.bean.CabnetDeviceInfoBean;
 import com.link.cloud.network.bean.CheckInBean;
 import com.link.cloud.network.bean.CheckInRequest;
+import com.link.cloud.network.bean.CodeBean;
+import com.link.cloud.network.bean.CodeInBean;
 import com.link.cloud.network.bean.PasswordBean;
 import com.link.cloud.network.bean.RequestBindFinger;
 
@@ -32,6 +36,7 @@ public class EntranceContronller {
 
         void CheckInSuccess(CheckInBean data);
         void passSuccess(PasswordBean data);
+        void CodeInSuccess(CodeInBean data);
 
 
 
@@ -113,27 +118,32 @@ public class EntranceContronller {
         });
     }
     public void openDoorQr(String qrCode){
-        api.openDoorByQr(qrCode).compose(IOMainThread.<BaseEntity>composeIO2main()).subscribe(new BaseObserver() {
+        Gson gson = new Gson();
+        CodeBean codeBean = null;
+        try {
+            codeBean = gson.fromJson(qrCode, CodeBean.class);
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+        if(codeBean==null){
+            return;
+        }
+        api.openDoorByQr(codeBean).compose(IOMainThread.<BaseEntity<CodeInBean>>composeIO2main()).subscribe(new BaseObserver<CodeInBean>() {
 
 
             @Override
-            public void onNext(Object o) {
-
-            }
-
-            @Override
-            protected void onSuccees(BaseEntity t) {
-
+            protected void onSuccees(BaseEntity<CodeInBean> t) {
+                listener.CodeInSuccess(t.getData());
             }
 
             @Override
             protected void onCodeError(String msg, String codeErrorr) {
-
+                listener.onMainErrorCode(msg);
             }
 
             @Override
             protected void onFailure(Throwable e, boolean isNetWorkError) {
-
+                listener.onMainFail(e, isNetWorkError);
             }
         });}
 }

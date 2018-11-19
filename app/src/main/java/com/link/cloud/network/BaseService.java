@@ -5,6 +5,8 @@ import com.link.cloud.network.bean.BindUser;
 import com.link.cloud.network.bean.CabnetDeviceInfoBean;
 import com.link.cloud.network.bean.CheckInBean;
 import com.link.cloud.network.bean.CheckInRequest;
+import com.link.cloud.network.bean.CodeBean;
+import com.link.cloud.network.bean.CodeInBean;
 import com.link.cloud.network.bean.PasswordBean;
 import com.link.cloud.network.bean.RequestBindFinger;
 import com.link.cloud.network.bean.SingleUser;
@@ -63,7 +65,7 @@ public interface BaseService {
      * 二维码开门
      */
     @POST(ApiConstants.QROPENDOOR)
-    Observable<BaseEntity> openDoorByQr(@Path("qr") String qr);
+    Observable<BaseEntity<CodeInBean>> openDoorByQr(@Body CodeBean qr);
     /**
      * APP版本
      */

@@ -28,10 +28,12 @@ import com.link.cloud.network.HttpConfig;
 import com.link.cloud.network.bean.AllUser;
 import com.link.cloud.network.bean.BindUser;
 import com.link.cloud.network.bean.CheckInBean;
+import com.link.cloud.network.bean.CodeInBean;
 import com.link.cloud.network.bean.DeviceInfo;
 import com.link.cloud.network.bean.PasswordBean;
 import com.link.cloud.utils.DialogUtils;
 import com.link.cloud.utils.HexUtil;
+import com.link.cloud.utils.NettyClientBootstrap;
 import com.link.cloud.utils.RxTimerUtil;
 import com.link.cloud.utils.TTSUtils;
 import com.orhanobut.logger.Logger;
@@ -76,7 +78,8 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     private String deviceType;
     int total,direction,deviceTypeId;
     private DialogUtils dialogUtils;
-
+    private NettyClientBootstrap nettyClientBootstrap;
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void initViews() {
         DeviceInfo first = realm.where(DeviceInfo.class).findFirst();
@@ -135,6 +138,16 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
         entranceContronller = new EntranceContronller(this);
         RegisteReciver();
         initData();
+        ExecutorService service = Executors.newFixedThreadPool(1);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                nettyClientBootstrap = new NettyClientBootstrap(EntanceActivity.this, Constants.TCP_PORT, Constants.TCP_URL, "{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + HttpConfig.TOKEN + "\"}");
+                nettyClientBootstrap.start();
+            }
+        };
+        service.execute(runnable);
+
 
     }
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -244,6 +257,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
             TTSUtils.getInstance().speak(getString(R.string.login_fail));
 
         }
+        TTSUtils.getInstance().speak(msg);
     }
 
     @Override
@@ -316,6 +330,11 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     @Override
     public void passSuccess(PasswordBean data) {
         showActivity(SettingActivity.class);
+    }
+
+    @Override
+    public void CodeInSuccess(CodeInBean data) {
+        openDoor();
     }
 
     private void openDoor() {

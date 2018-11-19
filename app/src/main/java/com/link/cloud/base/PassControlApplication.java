@@ -74,15 +74,15 @@ public class PassControlApplication extends Application {
             }
             @Override
             public void onActivityPaused(Activity activity) {
-
-            }
-            @Override
-            public void onActivityStopped(Activity activity) {
-                Log.e("onActivityStarted: ",count+"" );
                 count--;
+                Log.e("onActivityStarted: ",count+"" );
                 Intent countIntent = new Intent(COUNT_CHANGE);
                 countIntent.putExtra("count",count);
                 sendBroadcast(countIntent);
+            }
+            @Override
+            public void onActivityStopped(Activity activity) {
+
             }
             @Override
             public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
