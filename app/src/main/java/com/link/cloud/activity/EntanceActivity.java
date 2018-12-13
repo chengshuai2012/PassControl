@@ -328,7 +328,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
 
     @Override
     public void setupChanged(int format, int width, int height) {
-
+        Log.e(TAG, "setupChanged: ");
     }
 
     @Override
