@@ -28,6 +28,8 @@ import com.orhanobut.logger.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
@@ -37,7 +39,7 @@ import io.realm.RealmResults;
  * Created by OFX002 on 2018/9/20.
  */
 
-public abstract class BaseActivity extends AppCompatActivity implements Venueutils.VenueCallBack {
+public abstract class BaseActivity extends AppCompatActivity  {
 
     private Unbinder bind;
     public Realm realm;
@@ -55,9 +57,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Venueuti
     }
 
     protected abstract void initViews();
-    public void initVenue(){
-        PassControlApplication.getVenueUtils().initVenue(this, this, false);
-    }
+
     protected abstract int getLayoutId();
 
     @Override
@@ -83,8 +83,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Venueuti
             String msg = intent.getStringExtra("msg");
             String type  =null;
             JSONObject object=null;
-            Log.e( "onReceive: ",msg );
-            Toast.makeText(BaseActivity.this,msg,Toast.LENGTH_LONG).show();
             try {
                 object = new JSONObject(msg);
                 type = object.getString("msgType");
@@ -131,6 +129,43 @@ public abstract class BaseActivity extends AppCompatActivity implements Venueuti
                             });
 
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if("ENTRANCE_GUARD".equals(type)){
+                try {
+                    JSONObject data = object.getJSONObject("data");
+                    String uuid = data.getString("uuid");
+                    final RealmResults<AllUser> personIn = realm.where(AllUser.class).equalTo("uuid", uuid).findAll();
+                    for(int x=0;x<personIn.size();x++){
+                        final int finalX = x;
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                AllUser person = personIn.get(finalX);
+                                person.setIsIn(1);
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if("APP_REBOOT".equals(type)){
+                try {
+                    final RealmResults<AllUser> personIn = realm.where(AllUser.class).equalTo("isIn", 1).findAll();
+
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            while (personIn.size()>0){
+                                personIn.get(0).setIsIn(0);
+                            }
+                        }
+                    });
+
+                    Runtime.getRuntime().exec("su -c reboot");
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -236,8 +271,4 @@ public abstract class BaseActivity extends AppCompatActivity implements Venueuti
         win.setAttributes(winParams);
     }
 
-    @Override
-    public void modelMsg(int state, String msg) {
-        Log.e("modelMsg: ", state+"");
-    }
 }

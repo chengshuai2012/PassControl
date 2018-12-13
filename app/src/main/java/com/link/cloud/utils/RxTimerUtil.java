@@ -1,5 +1,7 @@
 package com.link.cloud.utils;
 
+import android.util.Log;
+
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -62,7 +64,9 @@ public class RxTimerUtil {
 
             @Override
             public void onError(@NonNull Throwable e) {
+                cancel();
                 interval(milliseconds,next);
+                Log.e("onError: ", e.getMessage());
             }
 
             @Override

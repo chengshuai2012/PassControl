@@ -4,15 +4,19 @@ import com.link.cloud.network.bean.APPVersionBean;
 import com.link.cloud.network.bean.BindUser;
 import com.link.cloud.network.bean.CabnetDeviceInfoBean;
 import com.link.cloud.network.bean.CheckInBean;
+import com.link.cloud.network.bean.CheckInByOther;
+import com.link.cloud.network.bean.CheckInLogRequest;
 import com.link.cloud.network.bean.CheckInRequest;
 import com.link.cloud.network.bean.CodeBean;
 import com.link.cloud.network.bean.CodeInBean;
 import com.link.cloud.network.bean.PasswordBean;
 import com.link.cloud.network.bean.RequestBindFinger;
+import com.link.cloud.network.bean.RequestSingleFace;
 import com.link.cloud.network.bean.SingleUser;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -54,7 +58,11 @@ public interface BaseService {
      * 开门
      */
     @POST(ApiConstants.CHECKIN)
-    Observable<BaseEntity<CheckInBean>> checkIn(@Path("type") int type, @Body CheckInRequest checkInRequest);
+    Observable<BaseEntity<CheckInBean>> checkIn(@Path("type") int type, @Body CheckInRequest checkInRequest);/**
+     * 开门日志
+     */
+    @POST(ApiConstants.QROPENDOORLOG)
+    Observable<BaseEntity<CheckInBean>> checkInLog(@Body CheckInLogRequest checkInRequest);
   /**
      * 密码
      */
@@ -65,7 +73,13 @@ public interface BaseService {
      * 二维码开门
      */
     @POST(ApiConstants.QROPENDOOR)
-    Observable<BaseEntity<CodeInBean>> openDoorByQr(@Body CodeBean qr);
+    Observable<BaseEntity<CodeInBean>> openDoorByQr(@Body CheckInByOther qr);
+
+    /**
+     * 获取单独人脸
+     */
+    @POST(ApiConstants.GETSINGLEPERSONFACE)
+    Observable<BaseEntity<CodeInBean>> getSingleFace(@Body RequestSingleFace requestSingleFace);
     /**
      * APP版本
      */

@@ -25,6 +25,7 @@ import com.link.cloud.base.BaseActivity;
 public class DialogUtils implements View.OnClickListener {
     private AlertDialog dialog;
     StringBuilder builder = new StringBuilder();
+    StringBuilder show = new StringBuilder();
     Activity context;
     TextView inputTel;
     private DialogUtils(Activity context) {
@@ -52,7 +53,10 @@ public class DialogUtils implements View.OnClickListener {
         dialog.show();
         Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 500);
+        int width =(int) context.getResources().getDimension(R.dimen.dialog_width);
+        int height =(int) context.getResources().getDimension(R.dimen.dialog_height);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
         TextView cancel = view.findViewById(R.id.cancel);
         TextView psw_login = view.findViewById(R.id.psw_login);
         ImageView close = view.findViewById(R.id.close);
@@ -114,10 +118,13 @@ public class DialogUtils implements View.OnClickListener {
             case R.id.cancel:
             case R.id.close:
                 dialog.dismiss();
+                builder.delete(0,builder.length());
+                show.delete(0,show.length());
                 break;
             case R.id.psw_login:
                 dialog.dismiss();
                 builder.delete(0,builder.length());
+                show.delete(0,show.length());
                 View psw_dialog = View.inflate(context, R.layout.psw_dialog, null);
                 showPsdDialog(psw_dialog);
                 break;
@@ -137,18 +144,21 @@ public class DialogUtils implements View.OnClickListener {
             case R.id.bind_keypad_8:
             case R.id.bind_keypad_9:
                 builder.append(((TextView) view).getText());
+                show.append("*");
                 if (inputTel != null) {
-                    inputTel.setText(builder.toString());
+                    inputTel.setText(show.toString());
                 }
                 break;
             case R.id.bind_keypad_ok:
                 builder.delete(0, builder.length());
+                show.delete(0, show.length());
                 inputTel.setText(context.getResources().getString(R.string.manager_pwd));
                 break;
             case R.id.bind_keypad_delect:
                 if (builder.length() >= 1) {
                     builder.deleteCharAt(builder.length() - 1);
-                    inputTel.setText(builder.toString());
+                    show.deleteCharAt(show.length() - 1);
+                    inputTel.setText(show.toString());
                 } else {
                     inputTel.setText(context.getResources().getString(R.string.manager_pwd));
                 }

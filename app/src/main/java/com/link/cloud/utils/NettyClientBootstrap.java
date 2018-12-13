@@ -111,8 +111,6 @@ public class NettyClientBootstrap {
             if (isConnect) {
                 isConnect = false;
                 //断线监听在此处处理
-
-
             }
             isRepeate = true;
             try {
@@ -142,7 +140,9 @@ public class NettyClientBootstrap {
                 IdleStateEvent e = (IdleStateEvent) evt;
                 switch (e.state()) {
                     case WRITER_IDLE:
-                        startNetty(msg);
+                        if(isConnect){
+                            startNetty(msg);
+                        }
                         break;
                 }
             }

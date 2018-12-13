@@ -4,8 +4,8 @@ package com.link.cloud.activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.link.cloud.R;
 import com.link.cloud.base.BaseActivity;
@@ -202,17 +202,15 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
     }
 
     public void showNext() {
-        Bundle bundle = new Bundle();
         Constants.CABINET_TYPE=deviceInfo.getDeviceTypeId();
-        skipActivity(EntanceActivity.class);
-//        if (deviceInfo.getDeviceTypeId() == Constants.REGULAR_CABINET) {
-//
-//        } else {
-//            skipActivity(SettingActivity.class);
-//            finish();
-//            HttpConfig.TOKEN = "";
-//            Toast.makeText(this, getString(R.string.error_type), Toast.LENGTH_LONG).show();
-//        }
+        if (Constants.MIX_OUT_1<=deviceInfo.getDeviceTypeId()&&deviceInfo.getDeviceTypeId()<=Constants.MIX_IN_N) {
+            skipActivity(EntanceActivity.class);
+        } else {
+            skipActivity(EntanceActivity.class);
+            finish();
+            HttpConfig.TOKEN = "";
+            Toast.makeText(this, getString(R.string.error_type), Toast.LENGTH_LONG).show();
+        }
     }
 
 

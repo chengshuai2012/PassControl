@@ -9,6 +9,7 @@ import android.os.Process;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -103,9 +104,10 @@ public class SettingActivity extends BaseActivity {
             qcodeHave.setTextColor(getResources().getColor(R.color.dark_black));
         }
         checkReadPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,REQUEST_SD_PERMISSION);
+        checkReadPermission(Manifest.permission.CAMERA,REQUEST_CAMERA_PERMISSION);
     }
-    public static final int REQUEST_SD_PERMISSION = 10111; //
-
+    public static final int REQUEST_SD_PERMISSION = 10111;
+    public static final int REQUEST_CAMERA_PERMISSION = 10112; //
 
 
     /**
@@ -158,7 +160,7 @@ public class SettingActivity extends BaseActivity {
 
         switch (requestCode) {
 
-            case REQUEST_SD_PERMISSION: //拨打电话
+            case REQUEST_SD_PERMISSION:
 
                 if (permissions.length != 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {//失败
 
@@ -186,7 +188,7 @@ public class SettingActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.save:
-                String edit_pswText = edit_psw.getText().toString();
+                final String edit_pswText = edit_psw.getText().toString();
                 String fisrt = Utils.getMD5(edit_pswText).toUpperCase();
                 final String second = Utils.getMD5(fisrt).toUpperCase();
                 if(face+veune+qcode==3){
@@ -200,7 +202,9 @@ public class SettingActivity extends BaseActivity {
                         public void execute(Realm realm) {
                             DeviceInfo deviceInfo = all.get(0);
                             deviceInfo.setDeviceId(mac);
-                            deviceInfo.setPsw(second);
+                            if(!TextUtils.isEmpty(edit_pswText)){
+                                deviceInfo.setPsw(second);
+                            }
                             deviceInfo.setFace(face);
                             deviceInfo.setQcode(qcode);
                             deviceInfo.setVeune(veune);

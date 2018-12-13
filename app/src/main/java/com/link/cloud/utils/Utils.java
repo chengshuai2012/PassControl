@@ -85,9 +85,8 @@ public class Utils{
         //例如：eth0      Link encap:Ethernet  HWaddr 00:16:E8:3E:DF:67
         if (result.length() > 0 && result.contains("HWaddr") == true) {
             Mac = result.substring(result.indexOf("HWaddr") + 6, result.length() - 1);
-            Log.i("test", "Mac:" + Mac + " Mac.length: " + Mac.length());
             result = Mac;
-            Log.i("test", result + " result.length: " + result.length());
+
         }
         return result;
     }
@@ -101,10 +100,9 @@ public class Utils{
             //执行命令cmd，只取结果中含有filter的这一行
             while ((line = br.readLine()) != null && line.contains(filter) == false) {
                 //result += line;
-                Log.i("test", "line: " + line);
+
             }
             result = line;
-            Log.i("test", "result: " + result);
         } catch (Exception e) {
             e.printStackTrace();
         }

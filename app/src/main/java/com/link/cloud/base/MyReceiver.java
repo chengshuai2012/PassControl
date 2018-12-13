@@ -1,6 +1,7 @@
 package com.link.cloud.base;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
@@ -19,9 +20,11 @@ public class MyReceiver extends BroadcastReceiver {
     {
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
         {
-            Intent i = new Intent(context, SplashActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(i);
+            Intent start = new Intent(Intent.ACTION_MAIN);
+            start.addCategory(Intent.CATEGORY_LAUNCHER);
+            ComponentName cn = new ComponentName("com.link.cloud", "SplashActivity");
+            intent.setComponent(cn);
+            context.startActivity(intent);
         }
     }
 

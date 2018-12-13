@@ -36,7 +36,7 @@
     <string name="pay_restTime">支付倒计时</string>
     <string name="confirm_pay">确认支付</string>
     <string name="group_lesson_pay">团操课支付</string>
-    <string name="handy_venue">Handy指静脉</string>
+    <string name="handy_venue">指静脉登陆</string>
     <string name="handy_venue_intro">请验证已有的指静脉，用于管理员登录</string>
     <string name="handy_venue_pay_intro">请验证已有的指静脉，用于支付</string>
     <string name="handy_card_info">汗的储值卡（尾号6986）</string>

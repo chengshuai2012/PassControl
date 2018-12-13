@@ -13,11 +13,20 @@ import com.link.cloud.network.RetrofitFactory;
 import com.link.cloud.network.bean.BindUser;
 import com.link.cloud.network.bean.CabnetDeviceInfoBean;
 import com.link.cloud.network.bean.CheckInBean;
+import com.link.cloud.network.bean.CheckInByOther;
+import com.link.cloud.network.bean.CheckInLogRequest;
 import com.link.cloud.network.bean.CheckInRequest;
 import com.link.cloud.network.bean.CodeBean;
 import com.link.cloud.network.bean.CodeInBean;
 import com.link.cloud.network.bean.PasswordBean;
 import com.link.cloud.network.bean.RequestBindFinger;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+
+import okhttp3.RequestBody;
 
 /**
  * Created by 49488 on 2018/11/12.
@@ -28,7 +37,7 @@ public class EntranceContronller {
 
     public interface EntranceControllerListener {
 
-        void onMainErrorCode(String msg);
+        void onMainErrorCode(String msg,String errorCode);
 
         void onMainFail(Throwable e, boolean isNetWork);
 
@@ -37,7 +46,8 @@ public class EntranceContronller {
         void CheckInSuccess(CheckInBean data);
         void passSuccess(PasswordBean data);
         void CodeInSuccess(CodeInBean data);
-
+        void onLoginSuccess(CabnetDeviceInfoBean cabnetDeviceInfoBean);
+        void CheckInLogSuccess(CheckInBean data);
 
 
     }
@@ -63,7 +73,7 @@ public class EntranceContronller {
 
             @Override
             protected void onCodeError(String msg,String codeErrorr)  {
-                listener.onMainErrorCode(msg);
+                listener.onMainErrorCode(msg,codeErrorr);
 
             }
 
@@ -79,6 +89,11 @@ public class EntranceContronller {
         CheckInRequest request = new CheckInRequest();
         request.setUuid(uid);
         request.setFingerprint(finger);
+        long createTime = System.currentTimeMillis();
+        SimpleDateFormat format =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Long time1=new Long(createTime);
+        String d = format.format(time1);
+        request.setCreateTime(d);
         api.checkIn(type,request).compose(IOMainThread.<BaseEntity<CheckInBean>>composeIO2main()).subscribe(new BaseObserver<CheckInBean>() {
 
             @Override
@@ -88,7 +103,36 @@ public class EntranceContronller {
 
             @Override
             protected void onCodeError(String msg, String codeErrorr) {
-                listener.onMainErrorCode(msg);
+                listener.onMainErrorCode(msg,codeErrorr);
+            }
+
+            @Override
+            protected void onFailure(Throwable e, boolean isNetWorkError) {
+                listener.onMainFail(e, isNetWorkError);
+            }
+        });
+    }
+    public void checkInLog(String uid,String finger,int type,int validType){
+        CheckInLogRequest request = new CheckInLogRequest();
+        request.setUuid(uid);
+        request.setFingerprint(finger);
+        long createTime = System.currentTimeMillis();
+        SimpleDateFormat format =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Long time1=new Long(createTime);
+        String d = format.format(time1);
+        request.setGateTime(d);
+        request.setType(type);
+        request.setValidType(validType);
+        api.checkInLog(request).compose(IOMainThread.<BaseEntity<CheckInBean>>composeIO2main()).subscribe(new BaseObserver<CheckInBean>() {
+
+            @Override
+            protected void onSuccees(BaseEntity<CheckInBean> t) {
+                listener.CheckInLogSuccess(t.getData());
+            }
+
+            @Override
+            protected void onCodeError(String msg, String codeErrorr) {
+                listener.onMainErrorCode(msg,codeErrorr);
             }
 
             @Override
@@ -108,7 +152,7 @@ public class EntranceContronller {
 
             @Override
             protected void onCodeError(String msg, String codeErrorr) {
-                listener.onMainErrorCode(msg);
+                listener.onMainErrorCode(msg,codeErrorr);
             }
 
             @Override
@@ -117,18 +161,26 @@ public class EntranceContronller {
             }
         });
     }
-    public void openDoorQr(String qrCode){
-        Gson gson = new Gson();
-        CodeBean codeBean = null;
+    public void openDoorQr(String qrCode,int InOrOut){
+        int type =0;
+        qrCode = qrCode.substring(0,qrCode.length()-1);
         try {
-            codeBean = gson.fromJson(qrCode, CodeBean.class);
-        } catch (JsonSyntaxException e) {
+             Long.parseLong(qrCode);
+             type=4;
+        } catch (Exception e) {
+            type=3;
             e.printStackTrace();
         }
-        if(codeBean==null){
-            return;
-        }
-        api.openDoorByQr(codeBean).compose(IOMainThread.<BaseEntity<CodeInBean>>composeIO2main()).subscribe(new BaseObserver<CodeInBean>() {
+        long createTime = System.currentTimeMillis();
+        SimpleDateFormat format =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Long time1=new Long(createTime);
+        String d = format.format(time1);
+        CheckInByOther checkInByOther = new CheckInByOther();
+        checkInByOther.setOther(qrCode);
+        checkInByOther.setValidType(type);
+        checkInByOther.setType(InOrOut);
+        checkInByOther.setGateTime(d);
+        api.openDoorByQr(checkInByOther).compose(IOMainThread.<BaseEntity<CodeInBean>>composeIO2main()).subscribe(new BaseObserver<CodeInBean>() {
 
 
             @Override
@@ -138,7 +190,7 @@ public class EntranceContronller {
 
             @Override
             protected void onCodeError(String msg, String codeErrorr) {
-                listener.onMainErrorCode(msg);
+                listener.onMainErrorCode(msg,codeErrorr);
             }
 
             @Override
@@ -146,5 +198,26 @@ public class EntranceContronller {
                 listener.onMainFail(e, isNetWorkError);
             }
         });}
+    public void login(String userNmae, String password) {
+        api.appLogin(userNmae, password)
+                .compose(IOMainThread.<BaseEntity<CabnetDeviceInfoBean>>composeIO2main())
+                .subscribe(new BaseObserver<CabnetDeviceInfoBean>() {
+                    @Override
+                    protected void onSuccees(BaseEntity<CabnetDeviceInfoBean> t)  {
+                        listener.onLoginSuccess(t.getData());
+                    }
+
+                    @Override
+                    protected void onCodeError(String msg,String codeErrorr) {
+                        listener.onMainErrorCode(msg,codeErrorr);
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable e, boolean isNetWorkError)  {
+                        listener.onMainFail(e, isNetWorkError);
+                    }
+                });
+    }
+
 }
 

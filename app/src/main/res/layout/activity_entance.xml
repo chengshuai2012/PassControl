@@ -35,11 +35,30 @@
             android:layout_marginTop="@dimen/entance_tv_margin"
             android:layout_marginBottom="@dimen/entance_tv_margin"
             />
-        <ImageView
-            android:layout_width="@dimen/entance_image_size"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="@dimen/entance_image_size"
-            android:src="@drawable/face_way"
-            />
+            android:layout_marginTop="@dimen/margin_main"
+            android:layout_marginBottom="@dimen/margin_main"
+            android:layout_centerHorizontal="true"
+            >
+            <com.link.cloud.widget.CameraSurfaceView
+                android:id="@+id/surfaceView"
+                android:layout_width="1dp"
+                android:layout_height="1dp"/>
+
+            <com.link.cloud.widget.CameraGLSurfaceView
+                android:layout_centerHorizontal="true"
+                android:id="@+id/sv_camera_surfaceview"
+                android:layout_width="400px"
+                android:layout_height="match_parent"
+                />
+            <com.link.cloud.widget.ClipView
+                android:id="@+id/clipView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout

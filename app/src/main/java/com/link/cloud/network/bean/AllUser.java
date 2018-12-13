@@ -70,7 +70,15 @@ public class AllUser extends RealmObject{
     private int userType;
     private String createTime;
     private int isadmin;
-    private int isin;
+    private int isIn;
+
+    public int getIsIn() {
+        return isIn;
+    }
+
+    public void setIsIn(int isIn) {
+        this.isIn = isIn;
+    }
 
     public String getPhone() {
         return phone;
@@ -81,11 +89,5 @@ public class AllUser extends RealmObject{
     }
 
     private String phone;
-    public int getIsin() {
-        return isin;
-    }
 
-    public void setIsin(int isin) {
-        this.isin = isin;
-    }
 }

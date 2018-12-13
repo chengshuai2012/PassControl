@@ -50,6 +50,12 @@ public class ApiConstants {
     public static final String DOWNLOAD = "downloadApp/{appType}";
 
     //二维码开门
-    public static final String QROPENDOOR = "entranceGuardByQrCode";
+    public static final String QROPENDOOR = "entranceGuardByOther";
+
+    //开门日志
+    public static final String QROPENDOORLOG = "entranceGuardLog";
+
+    //获取单个人脸
+    public static final String GETSINGLEPERSONFACE = "userFaces";
 
 }

@@ -41,6 +41,7 @@
                 android:textColor="@color/setting_text_black"
                 android:textSize="@dimen/text_size_60"
                 android:hint="@string/please_device_psw"
+                android:inputType="textPassword"
                 android:id="@+id/edit_psw"
                 />
 
