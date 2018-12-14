@@ -8,7 +8,17 @@ import io.realm.RealmObject;
 
 public class DeviceInfo extends RealmObject {
     String deviceId;
+    String deviceNo;
     String psw;
+
+    public String getDeviceNo() {
+        return deviceNo;
+    }
+
+    public void setDeviceNo(String deviceNo) {
+        this.deviceNo = deviceNo;
+    }
+
     String token;
     int deviceTypeId;
     int face;

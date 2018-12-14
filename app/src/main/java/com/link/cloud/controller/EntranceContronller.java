@@ -20,12 +20,16 @@ import com.link.cloud.network.bean.CodeBean;
 import com.link.cloud.network.bean.CodeInBean;
 import com.link.cloud.network.bean.PasswordBean;
 import com.link.cloud.network.bean.RequestBindFinger;
+import com.link.cloud.network.bean.YuanGuMessage;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 /**
@@ -48,7 +52,7 @@ public class EntranceContronller {
         void CodeInSuccess(CodeInBean data);
         void onLoginSuccess(CabnetDeviceInfoBean cabnetDeviceInfoBean);
         void CheckInLogSuccess(CheckInBean data);
-
+        void YuanGuSuccess(YuanGuMessage yuanGuMessage);
 
     }
 
@@ -218,6 +222,35 @@ public class EntranceContronller {
                     }
                 });
     }
+    public void checkYuanguFace(String deviceNo,String Mac,String filePath){
+
+        RequestBody requestDeviceNo = RequestBody.create(MediaType.parse("multipart/form-data"), deviceNo);
+        RequestBody requestMac = RequestBody.create(MediaType.parse("multipart/form-data"), Mac);
+        File file =new File(filePath);
+        RequestBody requestImgFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part requestImgPart = MultipartBody.Part.createFormData("files", file.getName(), requestImgFile);
+        api.CheckInYuangu(requestDeviceNo,requestMac,requestImgPart).compose(IOMainThread.<YuanGuMessage>composeIO2main()).subscribe(new Observer<YuanGuMessage>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.e( "onSubscribe: ", "start");
+            }
+
+            @Override
+            public void onNext(YuanGuMessage yuanGuMessage) {
+                listener.YuanGuSuccess(yuanGuMessage);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e( "onError: ",e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+                Log.e( "onComplete: ","");
+            }
+        });
+    };
 
 }
 

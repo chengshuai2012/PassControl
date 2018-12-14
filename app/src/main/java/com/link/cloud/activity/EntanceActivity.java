@@ -1,13 +1,17 @@
 package com.link.cloud.activity;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -27,9 +31,12 @@ import android.widget.Toast;
 import com.baidu.aip.ImageFrame;
 import com.baidu.aip.entity.IdentifyRet;
 import com.baidu.aip.face.ArgbPool;
+import com.baidu.aip.face.FaceCropper;
 import com.baidu.aip.manager.FaceDetector;
 import com.baidu.aip.manager.FaceEnvironment;
 import com.baidu.aip.manager.FaceSDKManager;
+import com.baidu.aip.utils.FileUitls;
+import com.baidu.aip.utils.ImageUtils;
 import com.baidu.idl.facesdk.FaceInfo;
 import com.baidu.idl.facesdk.FaceRecognize;
 import com.baidu.idl.facesdk.FaceSDK;
@@ -49,6 +56,7 @@ import com.link.cloud.network.bean.CodeInBean;
 import com.link.cloud.network.bean.DeviceInfo;
 import com.link.cloud.network.bean.PasswordBean;
 import com.link.cloud.network.bean.UserFace;
+import com.link.cloud.network.bean.YuanGuMessage;
 import com.link.cloud.utils.DialogUtils;
 import com.link.cloud.utils.HexUtil;
 import com.link.cloud.utils.NettyClientBootstrap;
@@ -63,9 +71,13 @@ import com.link.cloud.widget.CameraSurfaceView;
 import com.link.cloud.widget.ClipView;
 import com.orhanobut.logger.Logger;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -126,12 +138,13 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     private int face;
     private int qcode;
     private int veune;
+    private DeviceInfo first;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void initViews() {
-        DeviceInfo first = realm.where(DeviceInfo.class).findFirst();
-        if(first!=null){
+        first = realm.where(DeviceInfo.class).findFirst();
+        if(first !=null){
             deviceType = first.getDeviceType();
             face = first.getFace();
             qcode = first.getQcode();
@@ -328,7 +341,49 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
 
     @Override
     public void setupChanged(int format, int width, int height) {
-        Log.e(TAG, "setupChanged: ");
+
+    }
+    private void saveFace(FaceInfo faceInfo, ImageFrame imageFrame) {
+        final Bitmap bitmap = FaceCropper.getFace(imageFrame.getArgb(), faceInfo, imageFrame.getWidth());
+            // 注册来源保存到注册人脸目录
+             File file= new File(Environment.getExternalStorageDirectory()+"/register.jpg");
+                // 压缩人脸图片至300 * 300，减少网络传输时间
+       resize(bitmap, file, 300, 300);
+
+
+    }
+    public  void resize(Bitmap bitmap, File outputFile, int maxWidth, int maxHeight) {
+        try {
+            int bitmapWidth = bitmap.getWidth();
+            int bitmapHeight = bitmap.getHeight();
+            // 图片大于最大高宽，按大的值缩放
+            if (bitmapWidth > maxHeight || bitmapHeight > maxWidth) {
+                float widthScale = maxWidth * 1.0f / bitmapWidth;
+                float heightScale = maxHeight * 1.0f / bitmapHeight;
+
+                float scale = Math.min(widthScale, heightScale);
+                Matrix matrix = new Matrix();
+                matrix.postScale(scale, scale);
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmapWidth, bitmapHeight, matrix, false);
+            }
+
+            // save image
+            FileOutputStream out = new FileOutputStream(outputFile);
+            try {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                entranceContronller.checkYuanguFace(first.getDeviceNo(),first.getDeviceId(),Environment.getExternalStorageDirectory()+"/register.jpg");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    out.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -338,12 +393,9 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     long start = 0;
     @Override
     public Object onPreview(byte[] data, int width, int height, int format, long timestamp) {
-        if(System.currentTimeMillis()-start<3000){
-            return null;
-        }
-        start =System.currentTimeMillis();
+
         if(faceRecognize==null){
-            Toast.makeText(EntanceActivity.this,"人脸识别初始化失败",Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(EntanceActivity.this,"人脸识别初始化失败",Toast.LENGTH_SHORT).show();
             return null;
         }
         int[] argb = argbPool.acquire(width, height);
@@ -366,8 +418,15 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
             Log.e("faceMulti", faces.length + "");
         }
         if (value == FaceTracker.ErrCode.OK.ordinal() && faces != null) {
-            asyncIdentity(frame, faces);
-            faces=null;
+            if(System.currentTimeMillis()-start<2000){
+                return null;
+            }
+            start =System.currentTimeMillis();
+            File file= new File(Environment.getExternalStorageDirectory()+"/register.jpg");
+            if(file.exists()){
+                file.delete();
+            }
+            saveFace(faces[0],frame);
         }
         return null;
     }
@@ -728,6 +787,15 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     @Override
     public void CheckInLogSuccess(CheckInBean data) {
 
+    }
+
+    @Override
+    public void YuanGuSuccess(YuanGuMessage yuanGuMessage) {
+        if(yuanGuMessage.getRel()==0){
+            openDoor();
+        }else {
+            TTSUtils.getInstance().speak(yuanGuMessage.getMsg());
+        }
     }
 
     private void openDoor() {

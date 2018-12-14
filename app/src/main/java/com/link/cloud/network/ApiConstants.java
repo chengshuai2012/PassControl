@@ -58,4 +58,7 @@ public class ApiConstants {
     //获取单个人脸
     public static final String GETSINGLEPERSONFACE = "userFaces";
 
+    //远古验证人脸
+    public static final String IDENTIFYFACE = "GateFaceCheckin";
+
 }

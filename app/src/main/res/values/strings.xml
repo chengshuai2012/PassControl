@@ -182,7 +182,9 @@
     <string name="now_card">当前手机号：</string>
     <string name="coach">教练</string>
     <string name="device_psw">设备密码</string>
+    <string name="device_No">设备参数</string>
     <string name="please_device_psw">请输入设备密码</string>
+    <string name="please_device_No">请输入设备参数</string>
     <string name="choose_lesson">选择课程</string>
     <string name="coach_confirm">教练确认</string>
     <string name="member_confirm">学员确认</string>

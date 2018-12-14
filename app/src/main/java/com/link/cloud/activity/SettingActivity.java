@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,8 @@ public class SettingActivity extends BaseActivity {
     TextView save;
     @BindView(R.id.edit_psw)
     TextView edit_psw;
+    @BindView(R.id.device_No_edit)
+    EditText editDeviceNo;
     @BindView(R.id.qcode_have)
     TextView qcodeHave;
     @BindView(R.id.qcode_no)
@@ -189,6 +192,7 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.save:
                 final String edit_pswText = edit_psw.getText().toString();
+                final String deviceNo = editDeviceNo.getText().toString();
                 String fisrt = Utils.getMD5(edit_pswText).toUpperCase();
                 final String second = Utils.getMD5(fisrt).toUpperCase();
                 if(face+veune+qcode==3){
@@ -204,6 +208,9 @@ public class SettingActivity extends BaseActivity {
                             deviceInfo.setDeviceId(mac);
                             if(!TextUtils.isEmpty(edit_pswText)){
                                 deviceInfo.setPsw(second);
+                            }
+                            if(!TextUtils.isEmpty(deviceNo)){
+                                deviceInfo.setPsw(deviceNo);
                             }
                             deviceInfo.setFace(face);
                             deviceInfo.setQcode(qcode);
@@ -221,6 +228,7 @@ public class SettingActivity extends BaseActivity {
                             deviceBean.setFace(face);
                             deviceBean.setQcode(qcode);
                             deviceBean.setVeune(veune);
+                            deviceBean.setDeviceNo(deviceNo);
                             realm.copyToRealm(deviceBean);
                         }
                     });

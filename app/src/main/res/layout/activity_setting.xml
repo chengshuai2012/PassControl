@@ -47,6 +47,32 @@
 
         </LinearLayout>
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:id="@+id/device_No"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/setting_text_black"
+                android:textSize="@dimen/text_size_60"
+                android:text="@string/device_No"
+                />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/setting_text_black"
+                android:textSize="@dimen/text_size_60"
+                android:hint="@string/please_device_No"
+                android:inputType="textPassword"
+                android:id="@+id/device_No_edit"
+                />
+
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="@dimen/setting_text_view_width"
             android:layout_height="@dimen/setting_text_view_height"
             android:id="@+id/qcode_ll"

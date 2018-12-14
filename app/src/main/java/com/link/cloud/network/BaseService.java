@@ -13,15 +13,19 @@ import com.link.cloud.network.bean.PasswordBean;
 import com.link.cloud.network.bean.RequestBindFinger;
 import com.link.cloud.network.bean.RequestSingleFace;
 import com.link.cloud.network.bean.SingleUser;
+import com.link.cloud.network.bean.YuanGuMessage;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Streaming;
 
@@ -80,6 +84,15 @@ public interface BaseService {
      */
     @POST(ApiConstants.GETSINGLEPERSONFACE)
     Observable<BaseEntity<CodeInBean>> getSingleFace(@Body RequestSingleFace requestSingleFace);
+    /**
+     * 验证人脸
+     */
+    @Multipart
+    @POST(ApiConstants.IDENTIFYFACE)
+    @Headers("ReQuest:YuanGu")
+    Observable<YuanGuMessage> CheckInYuangu(@Part("deviceNo")RequestBody deviceNo,
+                                            @Part("mac")RequestBody mac,
+                                            @Part() MultipartBody.Part files);
     /**
      * APP版本
      */
