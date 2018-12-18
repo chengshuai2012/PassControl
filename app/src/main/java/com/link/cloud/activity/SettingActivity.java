@@ -235,6 +235,10 @@ public class SettingActivity extends BaseActivity {
                     });
                 }
                 Toast.makeText(this, getResources().getString(R.string.save_success), Toast.LENGTH_LONG).show();
+                Intent intent3 = new Intent(this, SplashActivity.class);
+                intent3.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent3);
+                Process.killProcess(Process.myPid());
                 break;
             case R.id.back_system_main:
                 Intent intent1 = new Intent(Intent.ACTION_MAIN, null);
