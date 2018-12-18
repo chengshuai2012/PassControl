@@ -35,7 +35,7 @@ public class FaceSDKManager {
     public static final int SDK_INITED = 4;
     public static final int SDK_FAIL = 5;
 
-    public static final String LICENSE_NAME = "idl-license.face-android";
+    public static final String LICENSE_NAME = "com-link-cloud-face-android";
     private FaceDetector faceDetector;
     private FaceFeature faceFeature;
     private Context context;

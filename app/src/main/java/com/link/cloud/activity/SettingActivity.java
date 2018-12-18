@@ -106,11 +106,12 @@ public class SettingActivity extends BaseActivity {
             qcodeHave.setBackgroundResource(R.drawable.border_gray_gradient);
             qcodeHave.setTextColor(getResources().getColor(R.color.dark_black));
         }
-        checkReadPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,REQUEST_SD_PERMISSION);
-        checkReadPermission(Manifest.permission.CAMERA,REQUEST_CAMERA_PERMISSION);
+        String [] pemission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA};
+        checkReadPermission(pemission,REQUEST_SD_PERMISSION);
+
     }
     public static final int REQUEST_SD_PERMISSION = 10111;
-    public static final int REQUEST_CAMERA_PERMISSION = 10112; //
+
 
 
     /**
@@ -125,17 +126,17 @@ public class SettingActivity extends BaseActivity {
 
      */
 
-    public boolean checkReadPermission(String string_permission,int request_code) {
+    public boolean checkReadPermission(String[] string_permission,int request_code) {
 
         boolean flag = false;
 
-        if (ContextCompat.checkSelfPermission(this, string_permission) == PackageManager.PERMISSION_GRANTED) {//已有权限
+        if (ContextCompat.checkSelfPermission(this, string_permission[1]) == PackageManager.PERMISSION_GRANTED) {//已有权限
 
             flag = true;
 
         } else {//申请权限
 
-            ActivityCompat.requestPermissions(this, new String[]{string_permission}, request_code);
+            ActivityCompat.requestPermissions(this, string_permission, request_code);
 
         }
 
@@ -210,7 +211,7 @@ public class SettingActivity extends BaseActivity {
                                 deviceInfo.setPsw(second);
                             }
                             if(!TextUtils.isEmpty(deviceNo)){
-                                deviceInfo.setPsw(deviceNo);
+                                deviceInfo.setDeviceNo(deviceNo);
                             }
                             deviceInfo.setFace(face);
                             deviceInfo.setQcode(qcode);

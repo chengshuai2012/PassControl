@@ -88,8 +88,8 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
                 DeviceInfo device = all.get(0);
                 device.setToken(cabnetDeviceInfoBean.getToken());
                 device.setDeviceTypeId(cabnetDeviceInfoBean.getDeviceInfo().getDeviceTypeId());
+                device.setBaiduKey(cabnetDeviceInfoBean.getDeviceInfo().getBaiduKey());
                 deviceInfo = device;
-                realm.copyToRealm(device);
             }
         });
         HttpConfig.TOKEN = cabnetDeviceInfoBean.getToken();

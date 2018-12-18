@@ -26,15 +26,9 @@ public class InterceptorUtil {
         return new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
             public void log(String message) {
-                try {
-                    String text = URLDecoder.decode(message, "utf-8");
-                    Log.e("OKHttp-----", text);
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                    Log.e("OKHttp-----", message);
-                }
+                Log.e(TAG, "log: "+message);
             }
-        }).setLevel(HttpLoggingInterceptor.Level.HEADERS);
+        }).setLevel(HttpLoggingInterceptor.Level.BODY);
     }
 
     public static Interceptor HeaderInterceptor(){
