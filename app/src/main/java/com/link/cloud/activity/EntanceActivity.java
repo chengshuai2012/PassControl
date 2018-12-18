@@ -42,6 +42,7 @@ import com.link.cloud.controller.EntranceContronller;
 import com.link.cloud.gpiotest.Gpio;
 import com.link.cloud.network.HttpConfig;
 import com.link.cloud.network.bean.AllUser;
+import com.link.cloud.network.bean.AllUserFaceBean;
 import com.link.cloud.network.bean.BindUser;
 import com.link.cloud.network.bean.CabnetDeviceInfoBean;
 import com.link.cloud.network.bean.CheckInBean;
@@ -109,9 +110,11 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     String uid;
     boolean IsNoPerson = false;
     boolean isDeleteAll = false;
+    boolean isDeleteAllFace = false;
     String gpiotext = "1067";
     private String deviceType;
     int total, direction, deviceTypeId;
+    int totaFace;
     private DialogUtils dialogUtils;
     private NettyClientBootstrap nettyClientBootstrap;
     Venueutils venueutils;
@@ -126,12 +129,13 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     private int face;
     private int qcode;
     private int veune;
+    private DeviceInfo first;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void initViews() {
-        DeviceInfo first = realm.where(DeviceInfo.class).findFirst();
-        if(first!=null){
+        first = realm.where(DeviceInfo.class).findFirst();
+        if(first !=null){
             deviceType = first.getDeviceType();
             face = first.getFace();
             qcode = first.getQcode();
@@ -142,7 +146,8 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
         if (face == 1) {
             faceLl.setVisibility(View.GONE);
         }else {
-            FaceSDKManager.getInstance().setKey("BLUF-54JT-RB4A-ZKDR");
+            entranceContronller.getUserFace(1,first.getDeviceId());
+            FaceSDKManager.getInstance().setKey(first.get);
             FaceSDKManager.getInstance().init(this);
             FaceEnvironment faceEnvironment = new FaceEnvironment();
             FaceSDKManager.getInstance().getFaceDetector().setFaceEnvironment(faceEnvironment);
@@ -656,7 +661,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
                     Callable<Boolean> task = new Callable<Boolean>() {
                         @Override
                         public Boolean call() throws Exception {
-                            entranceContronller.getUser(finalI);
+                            entranceContronller.getUser(finalI,first.getDeviceId());
                             return true;
                         }
                     };
@@ -688,7 +693,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     public void CheckInSuccess(CheckInBean data) {
         openDoor();
         if (IsNoPerson) {
-            entranceContronller.getUser(1);
+            entranceContronller.getUser(1,first.getDeviceId());
             if (venueutils.img != null) {
                 entranceContronller.checkInLog(uid, HexUtil.bytesToHexString(PassControlApplication.getVenueUtils().img), direction, 2);
             }
@@ -727,6 +732,56 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
 
     @Override
     public void CheckInLogSuccess(CheckInBean data) {
+
+    }
+
+    @Override
+    public void getUserFaceSuccess(final AllUserFaceBean data) {
+        final RealmResults<UserFace> all = realm.where(UserFace.class).findAll();
+        totaFace = data.getTotal();
+        if (!isDeleteAllFace) {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    all.deleteAllFromRealm();
+                    isDeleteAllFace = true;
+
+                }
+            });
+            int totalPage = totaFace / Constants.PAGE_NUM + 1;
+            ExecutorService executorService = Executors.newFixedThreadPool(totalPage);
+            List<Future<Boolean>> futures = new ArrayList();
+            if (totalPage >= 2) {
+                for (int i = 2; i <= totalPage; i++) {
+                    final int finalI = i;
+                    Callable<Boolean> task = new Callable<Boolean>() {
+                        @Override
+                        public Boolean call() throws Exception {
+                            entranceContronller.getUserFace(finalI,first.getDeviceId());
+                            return true;
+                        }
+                    };
+
+                    futures.add(executorService.submit(task));
+                }
+                for (Future<Boolean> future : futures) {
+                    try {
+                        future.get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                }
+                executorService.shutdown();
+            }
+        }
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealm(data.getData());
+            }
+        });
 
     }
 

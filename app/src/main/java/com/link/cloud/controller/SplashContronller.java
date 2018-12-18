@@ -73,9 +73,9 @@ public class SplashContronller {
                 });
     }
 
-    public void getUser( int Page) {
+    public void getUser( int Page,String deviceID) {
         RequestBindFinger requestBindFinger = new RequestBindFinger();
-        requestBindFinger.setContent("CHINA00001");
+        requestBindFinger.setContent(deviceID);
         requestBindFinger.setPageNo(Page);
         requestBindFinger.setPageSize(Constants.PAGE_NUM);
         api.getUser(requestBindFinger).compose(IOMainThread.<BaseEntity<BindUser>>composeIO2main()).subscribe(new BaseObserver<BindUser>() {

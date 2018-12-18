@@ -1,6 +1,7 @@
 package com.link.cloud.network;
 
 import com.link.cloud.network.bean.APPVersionBean;
+import com.link.cloud.network.bean.AllUserFaceBean;
 import com.link.cloud.network.bean.BindUser;
 import com.link.cloud.network.bean.CabnetDeviceInfoBean;
 import com.link.cloud.network.bean.CheckInBean;
@@ -13,6 +14,7 @@ import com.link.cloud.network.bean.PasswordBean;
 import com.link.cloud.network.bean.RequestBindFinger;
 import com.link.cloud.network.bean.RequestSingleFace;
 import com.link.cloud.network.bean.SingleUser;
+import com.link.cloud.network.bean.UserFace;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
@@ -44,6 +46,11 @@ public interface BaseService {
     @POST(ApiConstants.GETUSERS)
     Observable<BaseEntity<BindUser>> getUser(@Body RequestBindFinger requestBindFinger);
 
+    /**
+     * 获取用户人脸
+     */
+    @POST(ApiConstants.GETALLFACE)
+    Observable<BaseEntity<AllUserFaceBean>> getAllUserFace(@Body RequestBindFinger requestBindFinger);
 
 
     /**
@@ -78,8 +85,8 @@ public interface BaseService {
     /**
      * 获取单独人脸
      */
-    @POST(ApiConstants.GETSINGLEPERSONFACE)
-    Observable<BaseEntity<CodeInBean>> getSingleFace(@Body RequestSingleFace requestSingleFace);
+    @GET(ApiConstants.GETSINGLEPERSONFACE)
+    Observable<BaseEntity<UserFace>> getSingleFace(@Path("uuid") String  uuid);
     /**
      * APP版本
      */

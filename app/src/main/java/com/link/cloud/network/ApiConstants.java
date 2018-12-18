@@ -58,4 +58,8 @@ public class ApiConstants {
     //获取单个人脸
     public static final String GETSINGLEPERSONFACE = "userFaces";
 
+    //分页获取人脸信息
+    public static final String GETALLFACE = "{app}/{faces}";
+
+
 }

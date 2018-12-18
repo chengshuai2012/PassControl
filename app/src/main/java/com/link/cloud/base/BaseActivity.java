@@ -22,9 +22,11 @@ import com.link.cloud.network.IOMainThread;
 import com.link.cloud.network.RetrofitFactory;
 import com.link.cloud.network.bean.AllUser;
 import com.link.cloud.network.bean.SingleUser;
+import com.link.cloud.network.bean.UserFace;
 import com.link.cloud.utils.Venueutils;
 import com.orhanobut.logger.Logger;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -168,6 +170,34 @@ public abstract class BaseActivity extends AppCompatActivity  {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+
+            else if("GET_USERS_FACE".equals(type)){
+                JSONObject data = null;
+                try {
+                    data = object.getJSONObject("data");
+                    JSONArray uuids = data.getJSONArray("uuids");
+                    String uuid = (String) uuids.get(0);
+                    RetrofitFactory.getInstence().API().getSingleFace(uuid).compose(IOMainThread.<BaseEntity<UserFace>>composeIO2main()).subscribe(new BaseObserver<UserFace>() {
+                        @Override
+                        protected void onSuccees(BaseEntity<UserFace> t) {
+                            realm.copyToRealm(t.getData());
+                        }
+
+                        @Override
+                        protected void onCodeError(String msg, String codeErrorr) {
+
+                        }
+
+                        @Override
+                        protected void onFailure(Throwable e, boolean isNetWorkError) {
+
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         }
 

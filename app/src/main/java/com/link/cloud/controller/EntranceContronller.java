@@ -10,6 +10,7 @@ import com.link.cloud.network.BaseObserver;
 import com.link.cloud.network.BaseService;
 import com.link.cloud.network.IOMainThread;
 import com.link.cloud.network.RetrofitFactory;
+import com.link.cloud.network.bean.AllUserFaceBean;
 import com.link.cloud.network.bean.BindUser;
 import com.link.cloud.network.bean.CabnetDeviceInfoBean;
 import com.link.cloud.network.bean.CheckInBean;
@@ -48,6 +49,7 @@ public class EntranceContronller {
         void CodeInSuccess(CodeInBean data);
         void onLoginSuccess(CabnetDeviceInfoBean cabnetDeviceInfoBean);
         void CheckInLogSuccess(CheckInBean data);
+        void getUserFaceSuccess(AllUserFaceBean data);
 
 
     }
@@ -60,9 +62,9 @@ public class EntranceContronller {
     }
 
 
-    public void getUser(int Page) {
+    public void getUser(int Page,String deviceID) {
         RequestBindFinger requestBindFinger = new RequestBindFinger();
-        requestBindFinger.setContent("CHINA00001");
+        requestBindFinger.setContent(deviceID);
         requestBindFinger.setPageNo(Page);
         requestBindFinger.setPageSize(Constants.PAGE_NUM);
         api.getUser(requestBindFinger).compose(IOMainThread.<BaseEntity<BindUser>>composeIO2main()).subscribe(new BaseObserver<BindUser>() {
@@ -217,6 +219,30 @@ public class EntranceContronller {
                         listener.onMainFail(e, isNetWorkError);
                     }
                 });
+    }
+    public void getUserFace( int Page,String deviceID) {
+        RequestBindFinger requestBindFinger = new RequestBindFinger();
+        requestBindFinger.setContent(deviceID);
+        requestBindFinger.setPageNo(Page);
+        requestBindFinger.setPageSize(Constants.PAGE_NUM);
+        api.getAllUserFace(requestBindFinger).compose(IOMainThread.<BaseEntity<AllUserFaceBean>>composeIO2main()).subscribe(new BaseObserver<AllUserFaceBean>() {
+            @Override
+            protected void onSuccees(BaseEntity<AllUserFaceBean> t)  {
+                listener.getUserFaceSuccess(t.getData());
+            }
+
+            @Override
+            protected void onCodeError(String msg,String codeErrorr)  {
+                listener.onMainErrorCode(msg,codeErrorr);
+
+            }
+
+            @Override
+            protected void onFailure(Throwable e, boolean isNetWorkError) {
+                listener.onMainFail(e, isNetWorkError);
+            }
+        });
+
     }
 
 }
