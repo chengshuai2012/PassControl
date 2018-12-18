@@ -208,7 +208,7 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
         } else {
             skipActivity(EntanceActivity.class);
             finish();
-         //   HttpConfig.TOKEN = "";
+            HttpConfig.TOKEN = "";
             Toast.makeText(this, getString(R.string.error_type), Toast.LENGTH_LONG).show();
         }
     }
