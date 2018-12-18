@@ -180,8 +180,14 @@ public abstract class BaseActivity extends AppCompatActivity  {
                     String uuid = (String) uuids.get(0);
                     RetrofitFactory.getInstence().API().getSingleFace(uuid).compose(IOMainThread.<BaseEntity<UserFace>>composeIO2main()).subscribe(new BaseObserver<UserFace>() {
                         @Override
-                        protected void onSuccees(BaseEntity<UserFace> t) {
-                            realm.copyToRealm(t.getData());
+                        protected void onSuccees(final BaseEntity<UserFace> t) {
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    realm.copyToRealm(t.getData());
+                                }
+                            });
+
                         }
 
                         @Override

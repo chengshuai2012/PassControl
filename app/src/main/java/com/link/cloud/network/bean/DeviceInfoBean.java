@@ -55,6 +55,15 @@ public class DeviceInfoBean {
     private String deviceModel;
     private String deviceVersion;
     private Object pw;
+    String baiduKey;
+
+    public String getBaiduKey() {
+        return baiduKey;
+    }
+
+    public void setBaiduKey(String baiduKey) {
+        this.baiduKey = baiduKey;
+    }
 
     public int getId() {
         return id;

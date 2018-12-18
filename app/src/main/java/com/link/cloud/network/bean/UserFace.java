@@ -7,23 +7,23 @@ import io.realm.RealmObject;
  */
 
 public class UserFace extends RealmObject {
-    private String feature;
+    private String face;
 
-    private String userId;
+    private String uuid;
 
-    public String getFeature() {
-        return feature;
+    public String getFace() {
+        return face;
     }
 
-    public void setFeature(String feature) {
-        this.feature = feature;
+    public void setFace(String face) {
+        this.face = face;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

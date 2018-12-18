@@ -52,7 +52,7 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
         if (deviceInfo != null && deviceInfo.getPsw() != null && !TextUtils.isEmpty(deviceInfo.getPsw())) {
             if (deviceInfo.getToken() != null && !TextUtils.isEmpty(deviceInfo.getToken())) {
                 HttpConfig.TOKEN = deviceInfo.getToken();
-                splashContronller.getUser(1);
+                splashContronller.getUser(1,deviceInfo.getDeviceId());
             } else {
                 getToken();
             }
@@ -88,13 +88,13 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
                 DeviceInfo device = all.get(0);
                 device.setToken(cabnetDeviceInfoBean.getToken());
                 device.setDeviceTypeId(cabnetDeviceInfoBean.getDeviceInfo().getDeviceTypeId());
+                device.setBaiduKey(cabnetDeviceInfoBean.getDeviceInfo().getBaiduKey());
                 deviceInfo = device;
-                realm.copyToRealm(device);
             }
         });
         HttpConfig.TOKEN = cabnetDeviceInfoBean.getToken();
         splashContronller.getAppVersion();
-        splashContronller.getUser(1);
+        splashContronller.getUser(1,deviceInfo.getDeviceId());
     }
 
     @Override
@@ -143,7 +143,7 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
                         Callable<Boolean> task = new Callable<Boolean>() {
                             @Override
                             public Boolean call() throws Exception {
-                                splashContronller.getUser(finalI);
+                                splashContronller.getUser(finalI,deviceInfo.getDeviceId());
                                 return true;
                             }
                         };
@@ -208,7 +208,7 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
         } else {
             skipActivity(EntanceActivity.class);
             finish();
-            HttpConfig.TOKEN = "";
+         //   HttpConfig.TOKEN = "";
             Toast.makeText(this, getString(R.string.error_type), Toast.LENGTH_LONG).show();
         }
     }

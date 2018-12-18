@@ -56,10 +56,10 @@ public class ApiConstants {
     public static final String QROPENDOORLOG = "entranceGuardLog";
 
     //获取单个人脸
-    public static final String GETSINGLEPERSONFACE = "userFaces";
+    public static final String GETSINGLEPERSONFACE = "userFaces/{uuid}";
 
     //分页获取人脸信息
-    public static final String GETALLFACE = "{app}/{faces}";
+    public static final String GETALLFACE = "faces";
 
 
 }

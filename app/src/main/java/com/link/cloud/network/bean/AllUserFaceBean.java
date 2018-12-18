@@ -1,6 +1,5 @@
 package com.link.cloud.network.bean;
 
-import com.link.cloud.bean.UserFace;
 
 import java.util.List;
 
