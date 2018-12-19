@@ -435,7 +435,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(EntanceActivity.this,userIdOfMaxScore,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(EntanceActivity.this,userIdOfMaxScore,Toast.LENGTH_SHORT).show();
             }
         });
         return new IdentifyRet(userIdOfMaxScore, identifyScore);
@@ -512,7 +512,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
                             final RealmResults<AllUser> personIn = realm.where(AllUser.class).equalTo("uuid", uid).equalTo("isIn", 1).findAll();
                             if (personIn.size() > 0) {
                                 openDoor();
-                                entranceContronller.checkInLog(uid, null, direction, 1);
+                               // entranceContronller.checkInLog(uid, null, direction, 1);
                             } else {
                                 entranceContronller.checkIn(uid, null, direction);
                             }
@@ -671,10 +671,10 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
         if (IsNoPerson) {
             entranceContronller.getUser(1,first.getDeviceId());
             if (venueutils.img != null) {
-                entranceContronller.checkInLog(uid, HexUtil.bytesToHexString(PassControlApplication.getVenueUtils().img), direction, 2);
+             //   entranceContronller.checkInLog(uid, HexUtil.bytesToHexString(PassControlApplication.getVenueUtils().img), direction, 2);
             }
         } else {
-            entranceContronller.checkInLog(uid, null, direction, 1);
+            //entranceContronller.checkInLog(uid, null, direction, 1);
         }
 
     }
@@ -687,7 +687,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     @Override
     public void CodeInSuccess(CodeInBean data) {
         openDoor();
-        entranceContronller.checkInLog(null, null, direction, 3);
+      //  entranceContronller.checkInLog(null, null, direction, 3);
     }
 
     @Override

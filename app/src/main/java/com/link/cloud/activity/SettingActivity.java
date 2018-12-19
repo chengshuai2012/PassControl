@@ -103,11 +103,11 @@ public class SettingActivity extends BaseActivity {
             qcodeHave.setBackgroundResource(R.drawable.border_gray_gradient);
             qcodeHave.setTextColor(getResources().getColor(R.color.dark_black));
         }
-        checkReadPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,REQUEST_SD_PERMISSION);
-        checkReadPermission(Manifest.permission.CAMERA,REQUEST_CAMERA_PERMISSION);
+        String [] strings = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA};
+        checkReadPermission(strings,REQUEST_SD_PERMISSION);
+
     }
     public static final int REQUEST_SD_PERMISSION = 10111;
-    public static final int REQUEST_CAMERA_PERMISSION = 10112; //
 
 
     /**
@@ -122,17 +122,17 @@ public class SettingActivity extends BaseActivity {
 
      */
 
-    public boolean checkReadPermission(String string_permission,int request_code) {
+    public boolean checkReadPermission(String []string_permission,int request_code) {
 
         boolean flag = false;
 
-        if (ContextCompat.checkSelfPermission(this, string_permission) == PackageManager.PERMISSION_GRANTED) {//已有权限
+        if (ContextCompat.checkSelfPermission(this, string_permission[1]) == PackageManager.PERMISSION_GRANTED) {//已有权限
 
             flag = true;
 
         } else {//申请权限
 
-            ActivityCompat.requestPermissions(this, new String[]{string_permission}, request_code);
+            ActivityCompat.requestPermissions(this, string_permission, request_code);
 
         }
 
@@ -225,6 +225,10 @@ public class SettingActivity extends BaseActivity {
                         }
                     });
                 }
+                Intent intent3 = new Intent(this, SplashActivity.class);
+                intent3.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent3);
+                Process.killProcess(Process.myPid());
                 Toast.makeText(this, getResources().getString(R.string.save_success), Toast.LENGTH_LONG).show();
                 break;
             case R.id.back_system_main:
