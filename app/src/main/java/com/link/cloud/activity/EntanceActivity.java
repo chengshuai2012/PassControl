@@ -320,10 +320,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     long start = 0;
     @Override
     public Object onPreview(byte[] data, int width, int height, int format, long timestamp) {
-        if(System.currentTimeMillis()-start<3000){
-            return null;
-        }
-        start =System.currentTimeMillis();
+
         if(faceRecognize==null){
             Toast.makeText(EntanceActivity.this,"人脸识别初始化失败",Toast.LENGTH_SHORT).show();
             return null;
@@ -348,6 +345,10 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
             Log.e("faceMulti", faces.length + "");
         }
         if (value == FaceTracker.ErrCode.OK.ordinal() && faces != null) {
+            if(System.currentTimeMillis()-start<2000){
+                return null;
+            }
+            start =System.currentTimeMillis();
             asyncIdentity(frame, faces);
         }
         return null;
