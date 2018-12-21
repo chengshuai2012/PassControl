@@ -21,7 +21,7 @@ public class MdUsbService extends Service {
     private final static String TAG=MdUsbService.class.getSimpleName()+"_DEBUG";
     private final static String ACTION_USB_PERMISSION = "com.android.USB_PERMISSION";
     private MyBinder myBinder=new MyBinder();
-    private MicroFingerVein microFingerVein;
+    public MicroFingerVein microFingerVein;
     private SparseBooleanArray deviceStates=new SparseBooleanArray();
 
     private UsbMsgCallback usbMsgCallback;
@@ -195,6 +195,32 @@ public class MdUsbService extends Service {
             microFingerVein= MicroFingerVein.getInstance(MdUsbService.this);
             Log.e(TAG,"open failed,microFingerVein is null,try getting microFingerVein instance again.");
             return false;
+        }
+        public  byte[] tryGetBestImg(final int tryTimes){
+            if(microFingerVein==null) {
+                Log.e(TAG,"tryGetBestImg():microFingerVein is null.");
+                return null;
+            }
+            long startTimeMillis=System.currentTimeMillis();
+            float decentScore=microFingerVein.fEnergyThreshold*1.5f;//大于此值认为是质评优质图；
+            int i;
+            byte[] img=null;
+            float quaScore=0f;
+            for(i=0;i<tryTimes;i++){
+                byte[] imgTmp=microFingerVein.fvdev_grab(0);
+                if(imgTmp!=null&&MicroFingerVein.fv_quality(imgTmp)==0){
+                    float quaScoreTmp=microFingerVein.fImageEnergy;
+                    if(quaScoreTmp>quaScore){
+                        quaScore=quaScoreTmp;
+                        img=imgTmp;
+                    }
+                }
+                if(quaScore>=decentScore) break;//遇到质评优质图立即返回
+            }
+            if(i>=tryTimes) i=tryTimes-1;
+            Log.e(TAG,"constantly grab img "+(i+1)+"/"+tryTimes+" times,takeTimeMillis="
+                    +(System.currentTimeMillis()-startTimeMillis)+",highScore="+quaScore);
+            return img;
         }
         /**
          *  打开索引为0的指静脉设备，同openDevice(int index)；

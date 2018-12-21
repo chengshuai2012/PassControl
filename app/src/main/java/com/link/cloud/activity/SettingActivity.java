@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Power;
 import android.os.Process;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -18,7 +19,9 @@ import android.widget.Toast;
 
 import com.link.cloud.R;
 import com.link.cloud.base.BaseActivity;
+import com.link.cloud.gpiotest.Gpio;
 import com.link.cloud.network.bean.DeviceInfo;
+import com.link.cloud.utils.TTSUtils;
 import com.link.cloud.utils.Utils;
 
 import butterknife.BindView;
@@ -37,12 +40,8 @@ public class SettingActivity extends BaseActivity {
     TextView deviceId;
     @BindView(R.id.psw_ll)
     LinearLayout pswLl;
-    @BindView(R.id.open)
+    @BindView(R.id.open_lock)
     TextView open;
-    @BindView(R.id.close)
-    TextView close;
-    @BindView(R.id.open_or_close)
-    LinearLayout openOrClose;
     @BindView(R.id.back_system_setting)
     TextView backSystemSetting;
     @BindView(R.id.back_app)
@@ -77,16 +76,19 @@ public class SettingActivity extends BaseActivity {
     TextView restartApp;
     private String mac;
     int face, veune, qcode;
-
+    private DeviceInfo first;
+    String deviceType;
+    String gpiotext = "1067";
     @Override
     protected void initViews() {
         mac = Utils.getMac();
         deviceId.setText(getResources().getString(R.string.device_id) + mac);
-        DeviceInfo first = realm.where(DeviceInfo.class).findFirst();
-        if(first!=null){
+        first = realm.where(DeviceInfo.class).findFirst();
+        if(first !=null){
             face = first.getFace();
-            veune=first.getVeune();
-            qcode=first.getQcode();
+            veune= first.getVeune();
+            qcode= first.getQcode();
+            deviceType =first.getDeviceType();
         }
         if(face==1){
             faceNo.setTextColor(getResources().getColor(R.color.almost_white));
@@ -183,8 +185,8 @@ public class SettingActivity extends BaseActivity {
     }
 
     @OnClick({R.id.back_app, R.id.save, R.id.back_system_main,
-            R.id.back_system_setting, R.id.restart_app, R.id.close, R.id.open, R.id.face_have, R.id.face_no, R.id.venue_no, R.id.venue_have
-            , R.id.qcode_have, R.id.qcode_no
+            R.id.back_system_setting, R.id.restart_app, R.id.face_have, R.id.face_no, R.id.venue_no, R.id.venue_have
+            , R.id.qcode_have, R.id.qcode_no,R.id.open_lock
     })
     public void onClick(View view) {
         switch (view.getId()) {
@@ -256,17 +258,20 @@ public class SettingActivity extends BaseActivity {
                 startActivity(intent2);
                 Process.killProcess(Process.myPid());
                 break;
-            case R.id.close:
-                close.setTextColor(getResources().getColor(R.color.almost_white));
-                close.setBackgroundResource(R.drawable.border_red_gradient);
-                open.setBackgroundResource(R.drawable.border_gray_gradient);
-                open.setTextColor(getResources().getColor(R.color.dark_black));
-                break;
-            case R.id.open:
-                open.setTextColor(getResources().getColor(R.color.almost_white));
-                open.setBackgroundResource(R.drawable.border_red_gradient);
-                close.setBackgroundResource(R.drawable.border_gray_gradient);
-                close.setTextColor(getResources().getColor(R.color.dark_black));
+//            case R.id.close:
+//                close.setTextColor(getResources().getColor(R.color.almost_white));
+//                close.setBackgroundResource(R.drawable.border_red_gradient);
+//                open.setBackgroundResource(R.drawable.border_gray_gradient);
+//                open.setTextColor(getResources().getColor(R.color.dark_black));
+//                break;
+//            case R.id.open:
+//                open.setTextColor(getResources().getColor(R.color.almost_white));
+//                open.setBackgroundResource(R.drawable.border_red_gradient);
+//                close.setBackgroundResource(R.drawable.border_gray_gradient);
+//                close.setTextColor(getResources().getColor(R.color.dark_black));
+//                break;
+            case R.id.open_lock:
+                openDoor();
                 break;
             case R.id.face_have:
                 face=0;
@@ -313,5 +318,26 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
-
+    private void openDoor() {
+        if ("rk3399-mid".equals(deviceType)) {
+            try {
+                Gpio.gpioInt(gpiotext);
+                Thread.sleep(400);
+                Gpio.set(gpiotext, 48);
+                TTSUtils.getInstance().speak(getString(R.string.door_open));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Gpio.set(gpiotext, 49);
+        } else if ("rk3288".equals(deviceType)) {
+            try {
+                Power.set_zysj_gpio_value(4, 0);
+                Thread.sleep(400);
+                TTSUtils.getInstance().speak(getString(R.string.door_open));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Power.set_zysj_gpio_value(4, 1);
+        }
+    }
 }

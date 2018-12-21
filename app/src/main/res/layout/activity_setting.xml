@@ -161,38 +161,6 @@
         </LinearLayout>
 
 
-
-            <LinearLayout
-                android:id="@+id/open_or_close"
-                android:layout_width="@dimen/setting_text_view_width"
-                android:layout_height="@dimen/setting_text_view_height"
-                android:layout_above="@+id/back_system_setting"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingBottom="8px"
-                android:paddingTop="8px">
-
-                <TextView
-                    android:id="@+id/open"
-                    android:layout_width="@dimen/card_imageView_height"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="@string/open_door"
-                    android:background="@drawable/border_red_gradient"
-                    android:textColor="@color/almost_white"
-                    android:textSize="@dimen/text_size_28" />
-
-                <TextView
-                    android:id="@+id/close"
-                    android:layout_width="@dimen/card_imageView_height"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="@string/close_door"
-                    android:textColor="@color/dark_black"
-                    android:background="@drawable/border_gray_gradient"
-                    android:textSize="@dimen/text_size_28" />
-            </LinearLayout>
         <TextView
             android:id="@+id/save"
             android:layout_width="@dimen/setting_text_view_width"
@@ -246,6 +214,18 @@
             android:text="@string/restart"
             android:textColor="@color/setting_text_black"
             android:textSize="@dimen/text_size_32" />
+
+        <TextView
+            android:id="@+id/open_lock"
+            android:layout_width="@dimen/setting_text_view_width"
+            android:layout_height="100px"
+            android:background="@drawable/manager_text_bg"
+            android:gravity="center_horizontal"
+            android:paddingTop="10px"
+            android:text="@string/open_door"
+            android:textColor="@color/setting_text_black"
+            android:textSize="@dimen/text_size_32" />
+
     </LinearLayout>
 
 </LinearLayout>

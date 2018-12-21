@@ -78,7 +78,7 @@ public class Venueutils {
             }
             lastTouchState = 3;
             mdDeviceBinder.setDeviceLed(0, MdUsbService.getFvColorGREEN(), false);
-            img = mdDeviceBinder.tryGrabImg(0);
+            img = mdDeviceBinder.tryGetBestImg(5);
             if (img == null) {
                 Logger.e("get img failed,please try again");
                 TTSUtils.getInstance().speak(context.getString(R.string.again_finger));
