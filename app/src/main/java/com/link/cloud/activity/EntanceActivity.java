@@ -394,7 +394,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
             Log.e("faceMulti", faces.length + "");
         }
         if (value == FaceTracker.ErrCode.OK.ordinal() && faces != null) {
-            if(System.currentTimeMillis()-start<2000){
+            if(System.currentTimeMillis()-start<3000){
                 return null;
             }
             start =System.currentTimeMillis();
