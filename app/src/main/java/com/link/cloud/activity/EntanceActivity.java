@@ -1,6 +1,5 @@
 package com.link.cloud.activity;
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
@@ -35,8 +33,6 @@ import com.baidu.aip.face.FaceCropper;
 import com.baidu.aip.manager.FaceDetector;
 import com.baidu.aip.manager.FaceEnvironment;
 import com.baidu.aip.manager.FaceSDKManager;
-import com.baidu.aip.utils.FileUitls;
-import com.baidu.aip.utils.ImageUtils;
 import com.baidu.idl.facesdk.FaceInfo;
 import com.baidu.idl.facesdk.FaceRecognize;
 import com.baidu.idl.facesdk.FaceSDK;
