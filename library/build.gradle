@@ -39,4 +39,5 @@ dependencies {
     compile files('libs/baidu_license.jar')
     compile files('libs/FaceSDK.jar')
     compile files('libs/online_liantian_3-1-6-3-381_0808.jar')
+    implementation files('libs/ast.jar')
 }

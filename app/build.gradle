@@ -5,7 +5,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.link.cloud"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 26
         versionCode 10
         versionName "10.0"
@@ -15,11 +15,20 @@ android {
         }
     }
     signingConfigs {
+        def password = '123456'
+        def alias = 'soonvein'
+        def filePath = ('keystore4soonvein.jks')
+        debug {
+            keyAlias alias
+            keyPassword password
+            storeFile file(filePath)
+            storePassword(password)
+        }
         release {
-            keyAlias 'soonvein'
-            keyPassword '123456'
-            storeFile file('keystore4soonvein.jks')
-            storePassword '123456'
+            keyAlias alias
+            keyPassword password
+            storeFile file(filePath)
+            storePassword(password)
         }
     }
     sourceSets {
@@ -70,6 +79,6 @@ dependencies {
     implementation files('libs/Msc.jar')
     implementation files('libs/netty-all-4.0.14.Final.jar')
     implementation files('libs/httpclient.jar')
-    compile project(path: ':library')
+    compile project(path: ':facesdk')
     compile 'com.guo.android_extend:android-extend:1.0.5'
 }
