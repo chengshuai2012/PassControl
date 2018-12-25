@@ -564,6 +564,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
                             final RealmResults<AllUser> personIn = realm.where(AllUser.class).equalTo("uuid", uid).equalTo("isIn", 1).findAll();
                             if (personIn.size() > 0) {
                                 openDoor();
+                                TTSUtils.getInstance().speak(getString(R.string.door_open));
                               //  entranceContronller.checkInLog(uid, null, direction, 1);
                             } else {
                                 entranceContronller.checkIn(uid, null, direction);
@@ -720,6 +721,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     @Override
     public void CheckInSuccess(CheckInBean data) {
         openDoor();
+        TTSUtils.getInstance().speak(getString(R.string.door_open));
         if (IsNoPerson) {
             entranceContronller.getUser(1);
             if (venueutils.img != null) {
@@ -739,6 +741,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     @Override
     public void CodeInSuccess(CodeInBean data) {
         openDoor();
+        TTSUtils.getInstance().speak(getString(R.string.door_open));
       //  entranceContronller.checkInLog(null, null, direction, 3);
     }
 

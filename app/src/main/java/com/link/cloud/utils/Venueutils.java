@@ -36,8 +36,6 @@ public class Venueutils {
     public byte[] img;
     Context context;
     private boolean bOpen = false;//设备是否打开
-    private int[] pos = new int[1];
-    private float[] score = new float[1];
     private boolean ret;
     public ModelImgMng modelImgMng = new ModelImgMng();
     private int[] tipTimes = {0, 0};//后两次次建模时用了不同手指或提取特征识别时，最多重复提醒限制3次
@@ -86,33 +84,28 @@ public class Venueutils {
         }
         return state;
     }
-
-    List<AllUser> subListPeople = new ArrayList<>();
-    int nThreads =0;
     public String identifyNewImg(final List<AllUser> peoples) {
-        if(peoples.size()%1000==0){
-           nThreads =peoples.size()/1000;
-        }
-        else {
-            nThreads=peoples.size()/1000+1;
-        }
+        final int nThreads = peoples.size() / 1000 + 1;
         ExecutorService executorService = Executors.newFixedThreadPool(3);
         List<Future<String>> futures = new ArrayList();
-
         for (int i = 0; i < nThreads; i++) {
-            Log.e("identifyNewImg: ",peoples.size()+"iiiiiiiiii:"+i );
-                if(i==nThreads-1){
-                    subListPeople= peoples.subList(1000* i, peoples.size());
-                }else {
-                    subListPeople= peoples.subList(1000* i, 1000 * (i + 1));
-                }
+            List<AllUser> subListPeople = new ArrayList<>();
+            if (i == nThreads - 1) {
+                subListPeople = peoples.subList(1000 * i, peoples.size());
+            } else {
+                subListPeople = peoples.subList(1000 * i, 1000 * (i + 1));
+            }
+
+            final List<AllUser> finalSubListPeople = subListPeople;
             Callable<String> task = new Callable<String>() {
                 @Override
                 public String call() throws Exception {
+                    int[] pos = new int[1];
+                    float[] score = new float[1];
                     StringBuffer sb = new StringBuffer();
                     String[] uids = new String[1000];
-                    int position =0;
-                    for (AllUser userBean : subListPeople) {
+                    int position = 0;
+                    for (AllUser userBean : finalSubListPeople) {
                         sb.append(userBean.getFingerprint());
                         uids[position] = userBean.getUuid();
                         position++;
@@ -136,7 +129,8 @@ public class Venueutils {
         }
         for (Future<String> future : futures) {
             try {
-                if(!TextUtils.isEmpty(future.get())){
+                Log.d("future=", future.get() + "");
+                if (!TextUtils.isEmpty(future.get())) {
                     return future.get();
                 }
             } catch (InterruptedException e) {
@@ -148,6 +142,7 @@ public class Venueutils {
         executorService.shutdown();
         return null;
     }
+
 
 
 
