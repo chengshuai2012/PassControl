@@ -180,6 +180,9 @@ public class DialogUtils implements View.OnClickListener {
         }
     }
     public boolean isShowing() {
+        if(dialog==null){
+            return false;
+        }
       return dialog.isShowing();
     }
 }

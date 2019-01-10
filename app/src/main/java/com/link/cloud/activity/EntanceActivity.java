@@ -150,39 +150,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
         if (face == 1) {
             faceLl.setVisibility(View.GONE);
         }else {
-            if(TextUtils.isEmpty(first.getBaiduKey())){
-                return;
-            }
-//            FaceSDKManager.getInstance().setKey(first.getBaiduKey());
-//            FaceSDKManager.getInstance().init(this);
-//            FaceEnvironment faceEnvironment = new FaceEnvironment();
-//            FaceSDKManager.getInstance().getFaceDetector().setFaceEnvironment(faceEnvironment);
-//            FaceSDKManager.getInstance().setSdkInitListener(new FaceSDKManager.SdkInitListener() {
-//                @Override
-//                public void initStart() {
-//                    Log.e(TAG, "initStart: ");
-//                }
-//
-//                @Override
-//                public void initSuccess() {
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            faceRecognize = new FaceRecognize(EntanceActivity.this);
-//                            // RECOGNIZE_LIVE普通生活照、视频帧识别模型（包含特征抽取）
-//                            // RECOGNIZE_ID_PHOTO 身份证芯片模型（包含特征抽取）
-//                            // RECOGNIZE_NIR 近红外图片识别模型（包含特征抽取）
-//                            // 两张图片的识别需要使用相同的模型
-//                            faceRecognize.initModel(FaceSDK.RecognizeType.RECOGNIZE_LIVE);
-//                        }
-//                    });
-//                }
-//
-//                @Override
-//                public void initFail(int errorCode, String msg) {
-//                    Log.e(TAG, "initFail: ");
-//                }
-//            });
+            setCameraView();
         }
         if (qcode == 1) {
             qrcodeLl.setVisibility(View.GONE);
@@ -239,7 +207,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
         };
         service.execute(runnable);
 
-        setCameraView();
+
     }
 
     private void setCameraView() {
@@ -601,9 +569,14 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
         if(veune==0){
             startVerify();
         }
-        if (dialogUtils.isShowing()) {
-            dialogUtils.dissMiss();
+        try {
+            if (dialogUtils.isShowing()) {
+                dialogUtils.dissMiss();
+            }
+        }catch (Exception e){
+
         }
+
 
 
     }
