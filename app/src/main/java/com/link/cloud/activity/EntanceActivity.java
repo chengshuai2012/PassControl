@@ -55,6 +55,7 @@ import com.link.cloud.utils.HexUtil;
 import com.link.cloud.utils.NettyClientBootstrap;
 import com.link.cloud.utils.RxTimerUtil;
 import com.link.cloud.utils.TTSUtils;
+import com.link.cloud.utils.Utils;
 import com.link.cloud.utils.Venueutils;
 import com.link.cloud.veune.MdDevice;
 import com.link.cloud.veune.MdUsbService;
@@ -224,11 +225,11 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
         manager.setOnClickListener(this);
 
         RegisteReciver();
+        nettyClientBootstrap = new NettyClientBootstrap(EntanceActivity.this, Constants.TCP_PORT, Constants.TCP_URL, "{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + HttpConfig.TOKEN + "\"}");
         ExecutorService service = Executors.newFixedThreadPool(1);
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                nettyClientBootstrap = new NettyClientBootstrap(EntanceActivity.this, Constants.TCP_PORT, Constants.TCP_URL, "{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + HttpConfig.TOKEN + "\"}");
                 nettyClientBootstrap.start();
             }
         };
@@ -512,14 +513,21 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
                         if (uid != null) {
                             final RealmResults<AllUser> personIn = realm.where(AllUser.class).equalTo("uuid", uid).equalTo("isIn", 1).findAll();
                             if (personIn.size() > 0) {
-                                openDoor();
+                                int ifNetwork = Utils.getNetWorkState(EntanceActivity.this);
+                                if(ifNetwork==Utils.NETWORK_NONE){
+                                    Toast.makeText(EntanceActivity.this,"无网络,进场",Toast.LENGTH_LONG).show();
+                                    openDoor();
+                                }else {
+                                    Toast.makeText(EntanceActivity.this,"有网络,进场",Toast.LENGTH_LONG).show();
+                                    entranceContronller.checkIn(uid, null, direction);
+                                }
                                // entranceContronller.checkInLog(uid, null, direction, 1);
                             } else {
+                                Toast.makeText(EntanceActivity.this,"有网络,无进场",Toast.LENGTH_LONG).show();
                                 entranceContronller.checkIn(uid, null, direction);
                             }
                             IsNoPerson = false;
                         } else {
-
                             if (PassControlApplication.getVenueUtils().img != null) {
                                 entranceContronller.checkIn(null, HexUtil.bytesToHexString(PassControlApplication.getVenueUtils().img), direction);
                                 IsNoPerson = true;

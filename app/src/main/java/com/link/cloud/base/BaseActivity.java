@@ -83,6 +83,7 @@ public abstract class BaseActivity extends AppCompatActivity  {
         @Override
         public void onReceive(Context context, Intent intent) {
             String msg = intent.getStringExtra("msg");
+            Toast.makeText(BaseActivity.this,msg,Toast.LENGTH_LONG).show();
             String type  =null;
             JSONObject object=null;
             try {
@@ -135,6 +136,7 @@ public abstract class BaseActivity extends AppCompatActivity  {
                 }
             }
             else if("ENTRANCE_GUARD".equals(type)){
+                Toast.makeText(BaseActivity.this,msg,Toast.LENGTH_LONG).show();
                 try {
                     JSONObject data = object.getJSONObject("data");
                     String uuid = data.getString("uuid");
@@ -200,6 +202,24 @@ public abstract class BaseActivity extends AppCompatActivity  {
 
                         }
                     });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }    else if("DEL_USER_FINGERPRINTS".equals(type)){
+                JSONObject data = null;
+                try {
+                    data = object.getJSONObject("data");
+                    String uuid = data.getString("uuid");
+                    final RealmResults<AllUser> personIn = realm.where(AllUser.class).equalTo("uuid", uuid).findAll();
+
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                               personIn.deleteAllFromRealm();
+                            }
+                        });
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

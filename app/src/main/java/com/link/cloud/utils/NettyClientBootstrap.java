@@ -141,7 +141,9 @@ public class NettyClientBootstrap {
                 switch (e.state()) {
                     case WRITER_IDLE:
                         if(isConnect){
+                            Log.e("userEventTriggered: ","start" );
                             startNetty(msg);
+                            Log.e("userEventTriggered: ",msg );
                         }
                         break;
                 }
