@@ -515,15 +515,14 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
                             if (personIn.size() > 0) {
                                 int ifNetwork = Utils.getNetWorkState(EntanceActivity.this);
                                 if(ifNetwork==Utils.NETWORK_NONE){
-                                    Toast.makeText(EntanceActivity.this,"无网络,进场",Toast.LENGTH_LONG).show();
                                     openDoor();
                                 }else {
-                                    Toast.makeText(EntanceActivity.this,"有网络,进场",Toast.LENGTH_LONG).show();
+
                                     entranceContronller.checkIn(uid, null, direction);
                                 }
                                // entranceContronller.checkInLog(uid, null, direction, 1);
                             } else {
-                                Toast.makeText(EntanceActivity.this,"有网络,无进场",Toast.LENGTH_LONG).show();
+
                                 entranceContronller.checkIn(uid, null, direction);
                             }
                             IsNoPerson = false;

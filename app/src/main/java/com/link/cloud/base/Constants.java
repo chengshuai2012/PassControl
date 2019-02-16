@@ -19,7 +19,7 @@ public class Constants {
 
     public static  int CABINET_TYPE =0;
 
-    public static  int PAGE_NUM =100;
+    public static  int PAGE_NUM =25;
 
 
 
