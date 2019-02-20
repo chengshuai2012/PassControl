@@ -41,7 +41,7 @@ public class Venueutils {
     private int[] tipTimes = {0, 0};//后两次次建模时用了不同手指或提取特征识别时，最多重复提醒限制3次
     private int lastTouchState = 0;//记录上一次的触摸状态
     private int modOkProgress = 0;
-    private final static float IDENTIFY_SCORE_THRESHOLD = 0.53f;
+    private final static float IDENTIFY_SCORE_THRESHOLD = 0.63f;
     private final static float MODEL_SCORE_THRESHOLD = 0.4f;
     long first;
     public  void initVenue(Context context, MdUsbService.MyBinder mdDeviceBinder,  Boolean bOpen){
@@ -107,6 +107,9 @@ public class Venueutils {
                     String[] uids = new String[1000];
                     int position = 0;
                     for (AllUser userBean : finalSubListPeople) {
+                        if(TextUtils.isEmpty(userBean.getUuid())||TextUtils.isEmpty(userBean.getFingerprint())){
+                            continue;
+                        }
                         sb.append(userBean.getFingerprint());
                         uids[position] = userBean.getUuid();
                         position++;

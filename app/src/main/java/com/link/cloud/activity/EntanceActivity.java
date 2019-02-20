@@ -211,14 +211,14 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
             @Override
             public void onChange(RealmResults<AllUser> allUsers) {
                 peoples.clear();
-                peoples.addAll(realm.copyFromRealm(all));
+                peoples.addAll(realm.copyFromRealm(allUsers));
             }
         });
         managersRealm.addChangeListener(new RealmChangeListener<RealmResults<AllUser>>() {
             @Override
             public void onChange(RealmResults<AllUser> allUsers) {
                 managers.clear();
-                managers.addAll(realm.copyFromRealm(managersRealm));
+                managers.addAll(realm.copyFromRealm(allUsers));
             }
         });
         dialogUtils = DialogUtils.getDialogUtils(this);

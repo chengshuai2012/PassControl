@@ -52,6 +52,7 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
         if (deviceInfo != null && deviceInfo.getPsw() != null && !TextUtils.isEmpty(deviceInfo.getPsw())) {
             if (deviceInfo.getToken() != null && !TextUtils.isEmpty(deviceInfo.getToken())) {
                 HttpConfig.TOKEN = deviceInfo.getToken();
+                deviceID =deviceInfo.getDeviceId();
                 splashContronller.getUser(1,deviceInfo.getDeviceId());
             } else {
                 getToken();
@@ -65,6 +66,7 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
         final RealmResults<DeviceInfo> all = realm.where(DeviceInfo.class).findAll();
         if (!all.isEmpty()) {
             deviceInfo = all.get(0);
+            deviceID =deviceInfo.getDeviceId();
         }
     }
 
@@ -90,13 +92,14 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
                 device.setDeviceTypeId(cabnetDeviceInfoBean.getDeviceInfo().getDeviceTypeId());
                 device.setBaiduKey(cabnetDeviceInfoBean.getDeviceInfo().getBaiduKey());
                 deviceInfo = device;
+                deviceID =deviceInfo.getDeviceId();
             }
         });
         HttpConfig.TOKEN = cabnetDeviceInfoBean.getToken();
         splashContronller.getAppVersion();
         splashContronller.getUser(1,deviceInfo.getDeviceId());
     }
-
+    String deviceID ;
     @Override
     public void onMainErrorCode(String msg) {
         if (msg.equals("400000100000") ) {
@@ -143,7 +146,7 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
                         Callable<Boolean> task = new Callable<Boolean>() {
                             @Override
                             public Boolean call() throws Exception {
-                                splashContronller.getUser(finalI,deviceInfo.getDeviceId());
+                                splashContronller.getUser(finalI,deviceID);
                                 return true;
                             }
                         };
@@ -168,6 +171,7 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
                     realm.copyToRealm(data.getData());
                 }
             });
+
             showNext();
         } else {
             showNext();
