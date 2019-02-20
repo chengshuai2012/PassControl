@@ -85,7 +85,7 @@
         <ImageView
             android:layout_width="@dimen/entance_image_size"
             android:layout_height="@dimen/entance_image_size"
-            android:src="@drawable/card"
+            android:src="@drawable/qrcode_way"
             />
         <EditText
             android:id="@+id/code_number"
