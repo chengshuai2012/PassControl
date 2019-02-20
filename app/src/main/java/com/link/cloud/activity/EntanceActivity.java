@@ -496,7 +496,8 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
         @Override
         public void afterTextChanged(Editable editable) {
             String str = code_mumber.getText().toString();
-            if (str.contains("\n")) {
+            if (str.contains("}")) {
+
                 if (System.currentTimeMillis() - lastTime < 1500) {
                     code_mumber.setText("");
                     return;

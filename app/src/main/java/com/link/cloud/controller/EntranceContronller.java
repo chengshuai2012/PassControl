@@ -167,7 +167,6 @@ public class EntranceContronller {
     }
     public void openDoorQr(String qrCode,int InOrOut){
         int type =0;
-        qrCode = qrCode.substring(0,qrCode.length()-1);
         try {
              Long.parseLong(qrCode);
              type=4;
