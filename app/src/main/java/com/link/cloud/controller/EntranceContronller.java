@@ -43,6 +43,7 @@ public class EntranceContronller {
         void onMainFail(Throwable e, boolean isNetWork);
 
         void getUserSuccess(BindUser data);
+        void getUserSuccessNoSync(BindUser data);
 
         void CheckInSuccess(CheckInBean data);
         void passSuccess(PasswordBean data);
@@ -50,6 +51,7 @@ public class EntranceContronller {
         void onLoginSuccess(CabnetDeviceInfoBean cabnetDeviceInfoBean);
         void CheckInLogSuccess(CheckInBean data);
         void getUserFaceSuccess(AllUserFaceBean data);
+        void getUserRestSuccess(BindUser data);
 
 
     }
@@ -244,6 +246,56 @@ public class EntranceContronller {
         });
 
     }
+
+    public void getUser(int pageNume, int Page) {
+        RequestBindFinger requestBindFinger = new RequestBindFinger();
+        requestBindFinger.setContent("CHINA00001");
+        requestBindFinger.setPageNo(Page);
+        requestBindFinger.setPageSize(pageNume);
+        api.getUser(requestBindFinger).compose(IOMainThread.<BaseEntity<BindUser>>composeIO2main()).subscribe(new BaseObserver<BindUser>() {
+            @Override
+            protected void onSuccees(BaseEntity<BindUser> t)  {
+                listener.getUserSuccessNoSync(t.getData());
+            }
+
+            @Override
+            protected void onCodeError(String msg,String codeErrorr)  {
+                listener.onMainErrorCode(codeErrorr,msg);
+
+            }
+
+            @Override
+            protected void onFailure(Throwable e, boolean isNetWorkError) {
+                listener.onMainFail(e, isNetWorkError);
+            }
+        });
+
+    }
+    public void getUserRest(int pageNume, int Page) {
+        RequestBindFinger requestBindFinger = new RequestBindFinger();
+        requestBindFinger.setContent("CHINA00001");
+        requestBindFinger.setPageNo(Page);
+        requestBindFinger.setPageSize(pageNume);
+        api.getUser(requestBindFinger).compose(IOMainThread.<BaseEntity<BindUser>>composeIO2main()).subscribe(new BaseObserver<BindUser>() {
+            @Override
+            protected void onSuccees(BaseEntity<BindUser> t)  {
+                listener.getUserRestSuccess(t.getData());
+            }
+
+            @Override
+            protected void onCodeError(String msg,String codeErrorr)  {
+                listener.onMainErrorCode(codeErrorr,msg);
+
+            }
+
+            @Override
+            protected void onFailure(Throwable e, boolean isNetWorkError) {
+                listener.onMainFail(e, isNetWorkError);
+            }
+        });
+
+    }
+
 
 }
 

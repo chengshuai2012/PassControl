@@ -131,7 +131,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     private int qcode;
     private int veune;
     private DeviceInfo first;
-
+    String deviceID;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void initViews() {
@@ -143,6 +143,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
             qcode = first.getQcode();
             veune = first.getVeune();
             deviceTypeId = first.getDeviceTypeId();
+            deviceID =  first.getDeviceId();
         }
 
         if (face == 1) {
@@ -528,9 +529,10 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
                             IsNoPerson = false;
                         } else {
                             if (PassControlApplication.getVenueUtils().img != null) {
-                                entranceContronller.checkIn(null, HexUtil.bytesToHexString(PassControlApplication.getVenueUtils().img), direction);
+//                                entranceContronller.checkIn(null, HexUtil.bytesToHexString(PassControlApplication.getVenueUtils().img), direction);
                                 IsNoPerson = true;
                                 isDeleteAll = false;
+                               entranceContronller.getUser(1,1);
                             }
 
                         }
@@ -542,6 +544,95 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
 
             }
         });
+    }
+    int j = 0;
+    boolean isFirst = false;
+    @Override
+    public void getUserSuccessNoSync(BindUser data) {
+        if(peoples.size()<data.getTotal()){
+            int i = data.getTotal() - peoples.size();
+            j=0;
+
+            int i1 = peoples.size()/50+1;
+//                    int i2 = 0;
+//                    if(data.getTotal() %50==0){
+//                        i2=data.getTotal()/50;
+//                    }else {
+//                        i2 = data.getTotal() / 50+1;
+//                    }
+            if(i1*50-peoples.size()>=i){
+                j=1;
+            }else {
+                j=i1;
+            }
+            entranceContronller.getUserRest(50,i1);
+            isFirst =true;
+        }
+    }
+
+    @Override
+    public void getUserRestSuccess(final BindUser data) {
+        if(j==1){
+            if(data.getTotal()-peoples.size()==50){
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.copyToRealm(data.getData());
+                    }
+                });
+            }else {
+                for(int x = peoples.size();x<data.getTotal();x++){
+                    final int finalX = x;
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.copyToRealm(data.getData().get(finalX));
+                        }
+                    });
+                }
+            }
+
+        }else {
+            if(isFirst){
+                if(peoples.size()%50==0){
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.copyToRealm(data.getData());
+                        }
+                    });
+                }else {
+                    for(int x = peoples.size();x<data.getTotal();x++){
+                        final int finalX = x;
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                realm.copyToRealm(data.getData().get(finalX));
+                            }
+                        });
+                    }
+                }
+            }else {
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.copyToRealm(data.getData());
+                    }
+                });
+            }
+            isFirst=false;
+            j++;
+            int i2 = 0;
+            if(data.getTotal() %50==0){
+                i2=data.getTotal()/50;
+            }else {
+                i2 = data.getTotal() / 50+1;
+            }
+            if(j<=i2){
+                entranceContronller.getUserRest(50,j);
+            }
+
+        }
     }
 
     @Override
