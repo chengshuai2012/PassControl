@@ -796,13 +796,21 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
             @Override
             public void execute(Realm realm) {
                 DeviceInfo device = all.get(0);
-                device.setToken(cabnetDeviceInfoBean.getToken());
                 device.setDeviceTypeId(cabnetDeviceInfoBean.getDeviceInfo().getDeviceTypeId());
                 deviceInfo = device;
                 realm.copyToRealm(device);
             }
         });
         HttpConfig.TOKEN = cabnetDeviceInfoBean.getToken();
+        nettyClientBootstrap = new NettyClientBootstrap(EntanceActivity.this, Constants.TCP_PORT, Constants.TCP_URL, "{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + HttpConfig.TOKEN + "\"}");
+        ExecutorService service = Executors.newFixedThreadPool(1);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                nettyClientBootstrap.start();
+            }
+        };
+        service.execute(runnable);
     }
 
     @Override

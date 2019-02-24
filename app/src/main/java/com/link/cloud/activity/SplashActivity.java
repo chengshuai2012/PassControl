@@ -88,7 +88,7 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
             @Override
             public void execute(Realm realm) {
                 DeviceInfo device = all.get(0);
-                device.setToken(cabnetDeviceInfoBean.getToken());
+
                 device.setDeviceTypeId(cabnetDeviceInfoBean.getDeviceInfo().getDeviceTypeId());
                 device.setBaiduKey(cabnetDeviceInfoBean.getDeviceInfo().getBaiduKey());
                 deviceInfo = device;

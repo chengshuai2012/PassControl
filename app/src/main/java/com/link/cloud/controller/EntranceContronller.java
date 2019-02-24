@@ -260,7 +260,7 @@ public class EntranceContronller {
 
             @Override
             protected void onCodeError(String msg,String codeErrorr)  {
-                listener.onMainErrorCode(codeErrorr,msg);
+                listener.onMainErrorCode(msg,codeErrorr);
 
             }
 
@@ -284,7 +284,7 @@ public class EntranceContronller {
 
             @Override
             protected void onCodeError(String msg,String codeErrorr)  {
-                listener.onMainErrorCode(codeErrorr,msg);
+                listener.onMainErrorCode(msg,codeErrorr);
 
             }
 
