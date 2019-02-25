@@ -533,6 +533,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
                                 IsNoPerson = true;
                                 isDeleteAll = false;
                                entranceContronller.getUser(1,1);
+                                TTSUtils.getInstance().speak(getString(R.string.venue_fail));
                             }
 
                         }
@@ -676,8 +677,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     @Override
     public void onMainErrorCode(String msg, String codeError) {
         if (codeError.equals("400000100000")) {
-            skipActivity(SettingActivity.class);
-            TTSUtils.getInstance().speak(getString(R.string.login_fail));
+
         } else if (codeError.equals("400000999102")) {
             HttpConfig.TOKEN = "";
             getToken();
@@ -688,6 +688,9 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
 
             TTSUtils.getInstance().speak(msg);
         }
+        if(TextUtils.isEmpty(HttpConfig.TOKEN)){
+            restartApp();
+        }
     }
 
     private void getToken() {
@@ -696,7 +699,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
             deviceInfo = all.get(0);
             entranceContronller.login(deviceInfo.getDeviceId().trim(), deviceInfo.getPsw());
         } else {
-            skipActivity(SettingActivity.class);
+
         }
 
     }
@@ -707,13 +710,17 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
             TTSUtils.getInstance().speak(getString(R.string.error_net));
         } else {
             TTSUtils.getInstance().speak(getString(R.string.parse_error));
-            if (TextUtils.isEmpty(HttpConfig.TOKEN)) {
-                getToken();
-            }
         }
-
+        if(TextUtils.isEmpty(HttpConfig.TOKEN)){
+            restartApp();
+        }
     }
-
+    public void restartApp() {
+        Intent intent = new Intent(this, SplashActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.startActivity(intent);
+        android.os.Process.killProcess(android.os.Process.myPid());  //结束进程之前可以把你程序的注销或者退出代码放在这段代码之前
+    }
     @Override
     public void getUserSuccess(final BindUser data) {
         final RealmResults<AllUser> all = realm.where(AllUser.class).findAll();

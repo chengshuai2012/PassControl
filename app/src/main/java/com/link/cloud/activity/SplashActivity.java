@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.iflytek.cloud.Setting;
 import com.link.cloud.R;
 import com.link.cloud.base.BaseActivity;
 import com.link.cloud.base.Constants;
@@ -103,7 +104,6 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
     @Override
     public void onMainErrorCode(String msg) {
         if (msg.equals("400000100000") ) {
-            skipActivity(SettingActivity.class);
             TTSUtils.getInstance().speak(getString(R.string.login_fail));
         }else if(msg.equals("400000999102")){
             HttpConfig.TOKEN = "";

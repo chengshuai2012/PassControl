@@ -109,6 +109,11 @@ public class SettingActivity extends BaseActivity {
     }
     public static final int REQUEST_SD_PERMISSION = 10111;
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
 
     /**
 
@@ -226,10 +231,9 @@ public class SettingActivity extends BaseActivity {
                     });
                 }
                 Intent intent3 = new Intent(this, SplashActivity.class);
-                intent3.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent3);
-                Process.killProcess(Process.myPid());
                 Toast.makeText(this, getResources().getString(R.string.save_success), Toast.LENGTH_LONG).show();
+                finish();
                 break;
             case R.id.back_system_main:
                 Intent intent1 = new Intent(Intent.ACTION_MAIN, null);
