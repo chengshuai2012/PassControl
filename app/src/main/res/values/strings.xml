@@ -2,6 +2,7 @@
     <string name="app_name">PassControl</string>
     <string name="way1">人脸认证</string>
     <string name="way2">刷卡验证</string>
+    <string name="way4">二维码验证</string>
     <string name="way3">指静脉验证</string>
     <string name="again_finger">请移开手指,再次放置...</string>
     <string name="no_manager">抱歉您非管理员</string>

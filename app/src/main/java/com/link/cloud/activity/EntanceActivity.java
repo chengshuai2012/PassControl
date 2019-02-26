@@ -496,7 +496,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
         @Override
         public void afterTextChanged(Editable editable) {
             String str = code_mumber.getText().toString();
-            if (str.contains("}")) {
+            if (str.contains("\n")) {
 
                 if (System.currentTimeMillis() - lastTime < 1500) {
                     code_mumber.setText("");
@@ -604,7 +604,6 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     @Override
     public void onMainErrorCode(String msg, String codeError) {
         if (codeError.equals("400000100000")) {
-            skipActivity(SettingActivity.class);
             TTSUtils.getInstance().speak(getString(R.string.login_fail));
         } else if (codeError.equals("400000999102")) {
             HttpConfig.TOKEN = "";
@@ -615,6 +614,9 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
         } else {
 
             TTSUtils.getInstance().speak(msg);
+        }
+        if(TextUtils.isEmpty(HttpConfig.TOKEN)){
+            restartApp();
         }
     }
 
@@ -638,6 +640,9 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
             if (TextUtils.isEmpty(HttpConfig.TOKEN)) {
                 getToken();
             }
+        }
+        if(TextUtils.isEmpty(HttpConfig.TOKEN)){
+          restartApp();
         }
 
     }
@@ -718,7 +723,12 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
         TTSUtils.getInstance().speak(getString(R.string.door_open));
       //  entranceContronller.checkInLog(null, null, direction, 3);
     }
-
+    public void restartApp() {
+        Intent intent = new Intent(this, SplashActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.startActivity(intent);
+        android.os.Process.killProcess(android.os.Process.myPid());  //结束进程之前可以把你程序的注销或者退出代码放在这段代码之前
+    }
     @Override
     public void onLoginSuccess(final CabnetDeviceInfoBean cabnetDeviceInfoBean) {
         final RealmResults<DeviceInfo> all = realm.where(DeviceInfo.class).findAll();
@@ -726,7 +736,6 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
             @Override
             public void execute(Realm realm) {
                 DeviceInfo device = all.get(0);
-                device.setToken(cabnetDeviceInfoBean.getToken());
                 device.setDeviceTypeId(cabnetDeviceInfoBean.getDeviceInfo().getDeviceTypeId());
                 deviceInfo = device;
                 realm.copyToRealm(device);

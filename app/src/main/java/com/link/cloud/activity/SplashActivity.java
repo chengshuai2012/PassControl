@@ -51,13 +51,13 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
     private void showDate() {
         if (deviceInfo != null && deviceInfo.getPsw() != null && !TextUtils.isEmpty(deviceInfo.getPsw())) {
             if (deviceInfo.getToken() != null && !TextUtils.isEmpty(deviceInfo.getToken())) {
-                HttpConfig.TOKEN = deviceInfo.getToken();
                 splashContronller.getUser(1);
             } else {
                 getToken();
             }
         } else {
             skipActivity(SettingActivity.class);
+            finish();
         }
     }
 
@@ -86,7 +86,6 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
             @Override
             public void execute(Realm realm) {
                 DeviceInfo device = all.get(0);
-                device.setToken(cabnetDeviceInfoBean.getToken());
                 device.setDeviceTypeId(cabnetDeviceInfoBean.getDeviceInfo().getDeviceTypeId());
                 device.setBaiduKey(cabnetDeviceInfoBean.getDeviceInfo().getBaiduKey());
                 deviceInfo = device;
@@ -100,11 +99,14 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
     @Override
     public void onMainErrorCode(String msg) {
         if (msg.equals("400000100000") ) {
-            skipActivity(SettingActivity.class);
             TTSUtils.getInstance().speak(getString(R.string.login_fail));
         }else if(msg.equals("400000999102")){
             HttpConfig.TOKEN = "";
             getToken();
+        }
+        if(TextUtils.isEmpty(HttpConfig.TOKEN)){
+            skipActivity(EntanceActivity.class);
+            finish();
         }
 
 
@@ -116,6 +118,11 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
             skipActivity(EntanceActivity.class);
             TTSUtils.getInstance().speak(getString(R.string.error_net));
         }
+        if(TextUtils.isEmpty(HttpConfig.TOKEN)){
+            skipActivity(EntanceActivity.class);
+            finish();
+        }
+
     }
 
     boolean isDeleteAll = false;
@@ -205,6 +212,7 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
         Constants.CABINET_TYPE=deviceInfo.getDeviceTypeId();
         if (Constants.MIX_OUT_1<=deviceInfo.getDeviceTypeId()&&deviceInfo.getDeviceTypeId()<=Constants.MIX_IN_N) {
             skipActivity(EntanceActivity.class);
+            finish();
         } else {
             skipActivity(EntanceActivity.class);
             finish();

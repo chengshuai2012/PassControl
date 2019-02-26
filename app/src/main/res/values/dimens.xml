@@ -64,7 +64,7 @@
     <dimen name="main_image_height">145px</dimen>
     <dimen name="pre_pay_height">115px</dimen>
     <dimen name="text_size_56">56px</dimen>
-    <dimen name="text_size_60">60px</dimen>
+    <dimen name="text_size_60">30px</dimen>
     <dimen name="text_confirm">300px</dimen>
     <dimen name="sqaure_code_size">197px</dimen>
     <dimen name="setting_text_view_width">377px</dimen>
