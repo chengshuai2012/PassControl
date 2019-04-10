@@ -533,7 +533,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
                                 IsNoPerson = true;
                                 isDeleteAll = false;
                                entranceContronller.getUser(1,1);
-                                TTSUtils.getInstance().speak(getString(R.string.venue_fail));
+
                             }
 
                         }
