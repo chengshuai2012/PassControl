@@ -4,10 +4,13 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -24,9 +27,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.aip.FaceDetector;
+import com.baidu.aip.FaceSDKManager;
 import com.baidu.aip.ImageFrame;
 import com.baidu.aip.entity.IdentifyRet;
 import com.baidu.aip.face.ArgbPool;
+import com.baidu.aip.face.FaceCropper;
 import com.baidu.aip.manager.FaceDetector;
 import com.baidu.aip.manager.FaceEnvironment;
 import com.baidu.aip.manager.FaceSDKManager;
@@ -65,6 +71,9 @@ import com.link.cloud.widget.CameraSurfaceView;
 import com.link.cloud.widget.ClipView;
 import com.orhanobut.logger.Logger;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -149,37 +158,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
         if (face == 1) {
             faceLl.setVisibility(View.GONE);
         }else {
-            entranceContronller.getUserFace(1,first.getDeviceId());
-            FaceSDKManager.getInstance().setKey(first.getBaiduKey());
-            FaceSDKManager.getInstance().init(this);
-            FaceEnvironment faceEnvironment = new FaceEnvironment();
-            FaceSDKManager.getInstance().getFaceDetector().setFaceEnvironment(faceEnvironment);
-            FaceSDKManager.getInstance().setSdkInitListener(new FaceSDKManager.SdkInitListener() {
-                @Override
-                public void initStart() {
-                    Log.e(TAG, "initStart: ");
-                }
 
-                @Override
-                public void initSuccess() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            faceRecognize = new FaceRecognize(EntanceActivity.this);
-                            // RECOGNIZE_LIVE普通生活照、视频帧识别模型（包含特征抽取）
-                            // RECOGNIZE_ID_PHOTO 身份证芯片模型（包含特征抽取）
-                            // RECOGNIZE_NIR 近红外图片识别模型（包含特征抽取）
-                            // 两张图片的识别需要使用相同的模型
-                            faceRecognize.initModel(FaceSDK.RecognizeType.RECOGNIZE_LIVE);
-                        }
-                    });
-                }
-
-                @Override
-                public void initFail(int errorCode, String msg) {
-                    Log.e(TAG, "initFail: ");
-                }
-            });
         }
         if (qcode == 1) {
             qrcodeLl.setVisibility(View.GONE);
@@ -314,7 +293,54 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     public void setupChanged(int format, int width, int height) {
 
     }
+    private void saveFace(FaceInfo faceInfo, ImageFrame imageFrame) {
+        final Bitmap bitmap = FaceCropper.getFace(imageFrame.getArgb(), faceInfo, imageFrame.getWidth());
+        // 注册来源保存到注册人脸目录
+        File file= new File(Environment.getExternalStorageDirectory()+"/register.jpg");
+        // 压缩人脸图片至300 * 300，减少网络传输时间
+        resize(bitmap, file, 300, 300);
 
+
+    }
+    public  void resize(Bitmap bitmap, File outputFile, int maxWidth, int maxHeight) {
+        try {
+            int bitmapWidth = bitmap.getWidth();
+            int bitmapHeight = bitmap.getHeight();
+            // 图片大于最大高宽，按大的值缩放
+            if (bitmapWidth > maxHeight || bitmapHeight > maxWidth) {
+                float widthScale = maxWidth * 1.0f / bitmapWidth;
+                float heightScale = maxHeight * 1.0f / bitmapHeight;
+
+                float scale = Math.min(widthScale, heightScale);
+                Matrix matrix = new Matrix();
+                matrix.postScale(scale, scale);
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmapWidth, bitmapHeight, matrix, false);
+            }
+
+            // save image
+            FileOutputStream out = new FileOutputStream(outputFile);
+            try {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                String base64 = Utils.imageToBase64(Environment.getExternalStorageDirectory() + "/register.jpg");
+                RequestBindFace requestBindFace = new RequestBindFace();
+                requestBindFace.setFaceBase64(base64);
+                requestBindFace.setPhone(edituserRequest.getPhone());
+                requestBindFace.setDeviceId(deviceId);
+
+                // entranceContronller.checkYuanguFace(first.getDeviceNo(),first.getDeviceId(),Environment.getExternalStorageDirectory()+"/register.jpg");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    out.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     public boolean startPreviewImmediately() {
         return true;
@@ -322,11 +348,6 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     long start = 0;
     @Override
     public Object onPreview(byte[] data, int width, int height, int format, long timestamp) {
-
-        if(faceRecognize==null){
-            Toast.makeText(EntanceActivity.this,"人脸识别初始化失败",Toast.LENGTH_SHORT).show();
-            return null;
-        }
         int[] argb = argbPool.acquire(width, height);
 
         if (argb == null || argb.length != width * height) {
@@ -340,109 +361,29 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
         frame.setHeight(height);
         frame.setPool(argbPool);
         argbPool.release(argb);
-        int value = FaceSDKManager.getInstance().getFaceDetector().detect(frame);
-        // FaceSDKManager.getInstance().getFaceDetector().detectMultiFace(frame,5);
-        FaceInfo[] faces = FaceSDKManager.getInstance().getFaceDetector().getTrackedFaces();
+        int value = FaceSDKManager.getInstance().getFaceTracker(this)
+                .prepare_max_face_data_for_verify(frame.getArgb(), frame.getHeight(), frame.getWidth(),
+                        FaceSDK.ImgType.ARGB.ordinal(), FaceTracker.ActionType.RECOGNIZE.ordinal());
+//         value = FaceSDKManager.getInstance().detect(frame.getArgb(), frame.getWidth(), frame.getHeight());
+        FaceInfo[] faces = FaceSDKManager.getInstance().getFaceTracker(this).get_TrackedFaceInfo();
+
         if (faces != null) {
             Log.e("faceMulti", faces.length + "");
         }
         if (value == FaceTracker.ErrCode.OK.ordinal() && faces != null) {
-            if(System.currentTimeMillis()-start<2000){
+            if(System.currentTimeMillis()-start<4000){
                 return null;
             }
             start =System.currentTimeMillis();
-            asyncIdentity(frame, faces);
+            File file= new File(Environment.getExternalStorageDirectory()+"/register.jpg");
+            if(file.exists()){
+                file.delete();
+            }
+            saveFace(faces[0],frame);
         }
         return null;
     }
-    private static final int IDENTITY_IDLE = 2;
-    private static final int IDENTITYING = 3;
-    private volatile int identityStatus = IDENTITY_IDLE;
-    private ExecutorService es = Executors.newSingleThreadExecutor();
-    private void asyncIdentity(final ImageFrame imageFrame, final FaceInfo[] faceInfos) {
-        if (identityStatus != IDENTITY_IDLE) {
-            return ;
-        }
 
-        es.submit(new Runnable() {
-
-            @Override
-            public void run() {
-                if (faceInfos == null || faceInfos.length == 0) {
-                    return;
-                }
-                identity(imageFrame, faceInfos[0]);
-
-
-            }
-        });
-    }
-    private void identity(ImageFrame imageFrame, FaceInfo faceInfo) {
-        identityStatus = IDENTITYING;
-
-        float raw = Math.abs(faceInfo.headPose[0]);
-        float patch = Math.abs(faceInfo.headPose[1]);
-        float roll = Math.abs(faceInfo.headPose[2]);
-        // 人脸的三个角度大于20不进行识别
-        if (raw > 20 || patch > 20 || roll > 20) {
-            identityStatus = IDENTITY_IDLE;
-            return;
-        }
-
-
-        long starttime = System.currentTimeMillis();
-        int[] argb = imageFrame.getArgb();
-        int rows = imageFrame.getHeight();
-        int cols = imageFrame.getWidth();
-        int[] landmarks = faceInfo.landmarks;
-
-        IdentifyRet identifyRet = null;
-        identifyRet = identity(argb,rows,cols,landmarks);
-
-        if (identifyRet != null) {
-            entranceContronller.checkIn(identifyRet.getUserId(),"",direction);
-            Log.e( "identity: ", identifyRet.getUserId()+">>>>>>>>"+ identifyRet.getScore());
-        }
-    }
-    String userIdOfMaxScore = "";
-    public IdentifyRet identity(int[] argbData, int rows, int cols, int[] landmarks) {
-        if (argbData == null ) {
-            identityStatus = IDENTITY_IDLE;
-            return null;
-        }
-        byte[] imageFrameFeature = new byte[2048];
-        int ret = faceRecognize.extractFeature(argbData, rows, cols, FaceSDK.ImgType.ARGB, imageFrameFeature, landmarks,
-                FaceSDK.RecognizeType.RECOGNIZE_LIVE);
-        userIdOfMaxScore="";
-        float identifyScore = 0;
-        Realm realm = Realm.getDefaultInstance();
-        Log.e(TAG, "identity: "+System.currentTimeMillis());
-        RealmResults<UserFace> all = realm.where(UserFace.class).findAll();
-
-        Iterator<UserFace> iterator = all.iterator();
-
-        while (iterator.hasNext()) {
-            UserFace next = iterator.next();
-
-            byte[] feature = HexUtil.hexStringToByte(next.getFace());
-            final float score = FaceSDKManager.getInstance().getFaceFeature().getFaceFeatureDistance(
-                    feature, imageFrameFeature);
-            if (score > identifyScore) {
-                identifyScore = score;
-                userIdOfMaxScore = next.getUuid();
-
-            }
-        }
-        Log.e(TAG, "identity: "+System.currentTimeMillis());
-        identityStatus = IDENTITY_IDLE;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //Toast.makeText(EntanceActivity.this,userIdOfMaxScore,Toast.LENGTH_SHORT).show();
-            }
-        });
-        return new IdentifyRet(userIdOfMaxScore, identifyScore);
-    }
 
     @Override
     public void onBeforeRender(CameraFrameData data) {
