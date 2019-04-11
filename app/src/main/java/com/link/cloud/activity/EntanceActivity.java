@@ -626,7 +626,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
             deviceInfo = all.get(0);
             entranceContronller.login(deviceInfo.getDeviceId().trim(), deviceInfo.getPsw());
         } else {
-            skipActivity(SettingActivity.class);
+            //skipActivity(SettingActivity.class);
         }
 
     }

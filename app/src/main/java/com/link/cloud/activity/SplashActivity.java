@@ -56,7 +56,7 @@ public class SplashActivity extends BaseActivity implements SplashContronller.Sp
                 getToken();
             }
         } else {
-            skipActivity(SettingActivity.class);
+            skipActivity(EntanceActivity.class);
             finish();
         }
     }
