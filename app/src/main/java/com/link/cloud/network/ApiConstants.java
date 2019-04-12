@@ -37,6 +37,9 @@ public class ApiConstants {
     //获取单独用户
     public static final String GETSINGLEUSER = "user/{uuid}";
 
+    //验证人脸
+    public static final String IDENTIFYFACE = "user/{uuid}";
+
     //进场
     public static final String CHECKIN = "entranceGuard/{type}";
 

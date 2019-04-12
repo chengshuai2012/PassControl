@@ -42,15 +42,23 @@ public class InterceptorUtil {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Request mRequest=chain.request();
-                if(!TextUtils.isEmpty(HttpConfig.TOKEN)){
-                    build = mRequest.newBuilder().addHeader("access-token", HttpConfig.TOKEN).build();
-                }else {
-                    HttpUrl url = mRequest.url();
-                    String[] split = url.toString().split("/");
-                    String newUrl="http://www.deviceplatform.linkgooo.com/pub/appLogin/"+split[split.length-2]+"/"+split[split.length-1];
+                if("YuanGu".equals(mRequest.header("ReQuest"))){
+                    String newUrl="http://app.timeshuttlefit.com/devicePlatformCallback/faceEntranceGuardPdl";
+                    Log.e(TAG, "intercept: "+newUrl);
                     HttpUrl newBaseUrl = HttpUrl.parse(newUrl);
                     build = mRequest.newBuilder().url(newBaseUrl).build();
+                }else {
+                    if(!TextUtils.isEmpty(HttpConfig.TOKEN)){
+                        build = mRequest.newBuilder().addHeader("access-token", HttpConfig.TOKEN).build();
+                    }else {
+                        HttpUrl url = mRequest.url();
+                        String[] split = url.toString().split("/");
+                        String newUrl="http://www.deviceplatform.linkgooo.com/pub/appLogin/"+split[split.length-2]+"/"+split[split.length-1];
+                        HttpUrl newBaseUrl = HttpUrl.parse(newUrl);
+                        build = mRequest.newBuilder().url(newBaseUrl).build();
+                    }
                 }
+
                 return chain.proceed(build);
             }
         };

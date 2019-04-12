@@ -10,11 +10,13 @@ import com.link.cloud.network.bean.CheckInLogRequest;
 import com.link.cloud.network.bean.CheckInRequest;
 import com.link.cloud.network.bean.CodeBean;
 import com.link.cloud.network.bean.CodeInBean;
+import com.link.cloud.network.bean.MessageModel;
 import com.link.cloud.network.bean.PasswordBean;
 import com.link.cloud.network.bean.RequestBindFinger;
 import com.link.cloud.network.bean.RequestSingleFace;
 import com.link.cloud.network.bean.SingleUser;
 import com.link.cloud.network.bean.UserFace;
+import com.link.cloud.network.bean.VerifyFaceBean;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
@@ -59,7 +61,12 @@ public interface BaseService {
     @GET(ApiConstants.GETSINGLEUSER)
     @Headers("Content-Type:application/json;charset=utf-8")
     Observable<BaseEntity<SingleUser>> findOneUserFinger(@Path("uuid") String uuid);
-
+    /**
+     * 验证人脸
+     */
+    @POST(ApiConstants.IDENTIFYFACE)
+    @Headers("ReQuest:YuanGu")
+    Observable<BaseEntity<MessageModel>> CheckInYuangu(@Body VerifyFaceBean verifyFaceBean);
 
     /**
      * 开门

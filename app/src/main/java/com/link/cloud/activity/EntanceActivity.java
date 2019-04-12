@@ -30,12 +30,8 @@ import android.widget.Toast;
 import com.baidu.aip.FaceDetector;
 import com.baidu.aip.FaceSDKManager;
 import com.baidu.aip.ImageFrame;
-import com.baidu.aip.entity.IdentifyRet;
 import com.baidu.aip.face.ArgbPool;
 import com.baidu.aip.face.FaceCropper;
-import com.baidu.aip.manager.FaceDetector;
-import com.baidu.aip.manager.FaceEnvironment;
-import com.baidu.aip.manager.FaceSDKManager;
 import com.baidu.idl.facesdk.FaceInfo;
 import com.baidu.idl.facesdk.FaceRecognize;
 import com.baidu.idl.facesdk.FaceSDK;
@@ -46,6 +42,7 @@ import com.link.cloud.base.Constants;
 import com.link.cloud.base.PassControlApplication;
 import com.link.cloud.controller.EntranceContronller;
 import com.link.cloud.gpiotest.Gpio;
+import com.link.cloud.network.BaseEntity;
 import com.link.cloud.network.HttpConfig;
 import com.link.cloud.network.bean.AllUser;
 import com.link.cloud.network.bean.AllUserFaceBean;
@@ -56,6 +53,7 @@ import com.link.cloud.network.bean.CodeInBean;
 import com.link.cloud.network.bean.DeviceInfo;
 import com.link.cloud.network.bean.PasswordBean;
 import com.link.cloud.network.bean.UserFace;
+import com.link.cloud.network.bean.VerifyFaceBean;
 import com.link.cloud.utils.DialogUtils;
 import com.link.cloud.utils.HexUtil;
 import com.link.cloud.utils.NettyClientBootstrap;
@@ -136,9 +134,9 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
     private Camera mCamera;
     private ArgbPool argbPool = new ArgbPool();
     FaceRecognize faceRecognize ;
-    private int face;
-    private int qcode;
-    private int veune;
+    private int face=0;
+    private int qcode=1;
+    private int veune=1;
     private DeviceInfo first;
     String deviceID;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -158,7 +156,7 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
         if (face == 1) {
             faceLl.setVisibility(View.GONE);
         }else {
-
+            setCameraView();
         }
         if (qcode == 1) {
             qrcodeLl.setVisibility(View.GONE);
@@ -322,11 +320,10 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
             try {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
                 String base64 = Utils.imageToBase64(Environment.getExternalStorageDirectory() + "/register.jpg");
-                RequestBindFace requestBindFace = new RequestBindFace();
+                VerifyFaceBean requestBindFace = new VerifyFaceBean();
                 requestBindFace.setFaceBase64(base64);
-                requestBindFace.setPhone(edituserRequest.getPhone());
-                requestBindFace.setDeviceId(deviceId);
-
+                requestBindFace.setDeviceId(deviceID);
+                entranceContronller.checkYuanguFace(requestBindFace);
                 // entranceContronller.checkYuanguFace(first.getDeviceNo(),first.getDeviceId(),Environment.getExternalStorageDirectory()+"/register.jpg");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -575,6 +572,12 @@ public class EntanceActivity extends BaseActivity implements EntranceContronller
             }
 
         }
+    }
+
+    @Override
+    public void YuanGuSuccess(BaseEntity baseEntity) {
+        Log.e(TAG, "YuanGuSuccess: "+baseEntity.getMsg() );
+        openDoor();
     }
 
     @Override

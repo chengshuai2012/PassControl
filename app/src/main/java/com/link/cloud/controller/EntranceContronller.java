@@ -19,14 +19,18 @@ import com.link.cloud.network.bean.CheckInLogRequest;
 import com.link.cloud.network.bean.CheckInRequest;
 import com.link.cloud.network.bean.CodeBean;
 import com.link.cloud.network.bean.CodeInBean;
+import com.link.cloud.network.bean.MessageModel;
 import com.link.cloud.network.bean.PasswordBean;
 import com.link.cloud.network.bean.RequestBindFinger;
+import com.link.cloud.network.bean.VerifyFaceBean;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 import okhttp3.RequestBody;
 
 /**
@@ -52,7 +56,7 @@ public class EntranceContronller {
         void CheckInLogSuccess(CheckInBean data);
         void getUserFaceSuccess(AllUserFaceBean data);
         void getUserRestSuccess(BindUser data);
-
+        void YuanGuSuccess(BaseEntity baseEntity);
 
     }
 
@@ -280,7 +284,7 @@ public class EntranceContronller {
             @Override
             protected void onSuccees(BaseEntity<BindUser> t)  {
                 listener.getUserRestSuccess(t.getData());
-            }
+        }
 
             @Override
             protected void onCodeError(String msg,String codeErrorr)  {
@@ -295,7 +299,26 @@ public class EntranceContronller {
         });
 
     }
+    public void checkYuanguFace(VerifyFaceBean verifyFaceBean){
 
+        api.CheckInYuangu(verifyFaceBean).compose(IOMainThread.<BaseEntity<MessageModel>>composeIO2main()).subscribe(new BaseObserver<MessageModel>() {
+
+            @Override
+            protected void onSuccees(BaseEntity<MessageModel> t) {
+                listener.YuanGuSuccess(t);
+            }
+
+            @Override
+            protected void onCodeError(String msg, String codeErrorr) {
+                listener.onMainErrorCode(msg,codeErrorr);
+            }
+
+            @Override
+            protected void onFailure(Throwable e, boolean isNetWorkError) {
+                listener.onMainFail(e, isNetWorkError);
+            }
+        });
+    }
 
 }
 
